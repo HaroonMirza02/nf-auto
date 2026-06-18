@@ -1,0 +1,4 @@
+node_modules
+.env
+data/latest_digest.html
+.DS_Store

@@ -1,0 +1,14 @@
+{
+  "name": "nf-auto",
+  "version": "1.0.0",
+  "description": "NewsFlash Auto - Automated curated news digest engine by Vision71",
+  "main": "src/digest.js",
+  "scripts": {
+    "start": "node src/digest.js",
+    "test": "node -e \"require('./src/digest').runDigest()\""
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.13"
+  }
+}
