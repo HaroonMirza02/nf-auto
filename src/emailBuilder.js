@@ -1,13 +1,12 @@
 function buildEmail(summarizedData) {
-    const now = new Date();
-    const formattedDate = now.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
-    const categorySections = summarizedData.map(section => `
+  const now = new Date();
+  const formattedDate = now.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  const categorySections = summarizedData.map(section => `
     <div style="margin-bottom: 30px;">
       <div style="display: inline-block; background-color: #23232A; padding: 6px 14px; border-radius: 20px; margin-bottom: 15px;">
         <span style="color: #FFFFFF; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">${section.label}</span>
@@ -18,8 +17,7 @@ function buildEmail(summarizedData) {
     </div>
     <hr style="border: 0; border-top: 1px solid #2D2D34; margin: 30px 0;">
   `).join('');
-
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,12 +56,10 @@ function buildEmail(summarizedData) {
       <p style="color: #A1A1AA; margin: 0 0 5px 0; font-size: 16px;">Your daily curated news digest</p>
       <p style="color: #71717A; margin: 0; font-size: 14px;">${formattedDate}</p>
     </div>
-
     <!-- Content -->
     <div style="padding: 30px;">
       ${categorySections}
     </div>
-
     <!-- Footer -->
     <div style="padding: 30px; text-align: center; background-color: #16161A; border-top: 1px solid #2D2D34;">
       <p style="color: #71717A; margin: 0 0 10px 0; font-size: 13px;">Automated NewsFlash Engine &middot; Powered by OpenRouter & Node.js</p>
@@ -74,5 +70,4 @@ function buildEmail(summarizedData) {
 </html>
   `.trim();
 }
-
 module.exports = { buildEmail };
