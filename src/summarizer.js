@@ -4,9 +4,9 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
 
 const MODELS = [
-    'openai/gpt-oss-120b:free',
-    'nvidia/nemotron-3-ultra-253b-v1:free',
-    'nvidia/nemotron-3-super-120b-a12b:free'
+    'meta-llama/llama-3.3-70b-instruct:free',
+    'google/gemma-4-31b-it:free',
+    'meta-llama/llama-3.2-3b-instruct:free'
 ];
 
 async function summarizeAll(collectedData) {
