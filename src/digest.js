@@ -20,9 +20,18 @@ async function runDigest() {
         const emailHtml = buildEmail(summarizedData);
         console.log(`[${new Date().toISOString()}] Email built.`);
 
-        // Log the submission for inspection (optional, can be very long)
-        console.log(`[${new Date().toISOString()}] Digest HTML Content Ready.`);
-        // console.log(emailHtml); 
+        // Save a local copy for inspection
+        const fs = require('fs');
+        const path = require('path');
+        const outputDir = path.join(__dirname, '../data');
+        const outputPath = path.join(outputDir, 'latest_digest.html');
+
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
+        fs.writeFileSync(outputPath, emailHtml);
+        console.log(`[${new Date().toISOString()}] Local copy saved to: ${outputPath}`);
 
         // 4. Send Email
         await sendDigest(emailHtml);
