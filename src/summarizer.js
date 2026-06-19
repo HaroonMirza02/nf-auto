@@ -4,9 +4,9 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
 
 const MODELS = [
-    'meta-llama/llama-3.3-70b-instruct:free',
+    'google/gemma-4-26b-a4b-it:free',
     'google/gemma-4-31b-it:free',
-    'meta-llama/llama-3.2-3b-instruct:free'
+    'cohere/north-mini-code:free'
 ];
 
 async function summarizeAll(collectedData) {
@@ -99,8 +99,8 @@ Instructions:
             });
         }
 
-        // 5000ms delay between each category summarization to respect rate limits
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        // 10000ms delay between each category summarization to respect rate limits
+        await new Promise(resolve => setTimeout(resolve, 10000));
     }
 
     return summarizedResults;
