@@ -19,21 +19,20 @@ async function summarizeAll(collectedData) {
             .map((a, i) => `${i + 1}. Title: ${a.title}\nSummary: ${a.description.substring(0, 400)}\nSource: ${a.source}\nURL: ${a.url}`)
             .join('\n\n');
 
-        const prompt = `You are a professional news editor writing a daily digest email for a business audience.
+        const prompt = `You are a professional tech editor. Create a ultra-concise daily digest.
 
-Below are today's news articles for the category: ${category.label}
-
+Category: ${category.label}
+Articles:
 ${articleList}
 
-Instructions:
-- Write a clean HTML list using only <ul> and <li> tags
-- For each article write exactly 2 to 3 short sentences summarizing only the key facts
-- The tone must be human, concise, and easy to scan
-- Focus on what happened, why it matters, and who is affected
-- After each summary include the source name and a link formatted as: <a href="EXACT_URL_FROM_ABOVE">Read more</a>
-- Use the exact URLs provided above
-- Do not return markdown, backticks, or any text outside the HTML elements
-- Do not add headings or extra text`;
+CRITICAL INSTRUCTIONS:
+- Return ONLY a <ul> list with <li> items. 
+- For each article, write EXACTLY ONE short, high-impact sentence (max 20 words).
+- BOLD 2-3 key terms using ONLY <b> tags. 
+- NEVER use markdown like **. NEVER use code fences.
+- Strictly tech/innovation focus.
+- After the sentence, add source and link: <a href="URL">Read more</a>
+- Example: <b>Apple</b> is launching a new <b>AI chip</b> for the iPhone 17. TechCrunch: <a href="url">Read more</a>`;
 
         console.log(`[${new Date().toISOString()}] Summarizing category: ${category.label} using Google Gemini...`);
 
