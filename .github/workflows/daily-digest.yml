@@ -24,10 +24,19 @@ jobs:
 
       - name: Run Daily Digest
         env:
+          # API Keys
           GOOGLE_AI_KEY: ${{ secrets.GOOGLE_AI_KEY }}
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
           FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          GMAIL_RECIPIENT: ${{ secrets.GMAIL_RECIPIENT }}
+          
+          # Email Config (Matching your GitHub Secrets)
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          
+          # Use GMAIL_RECIPIENT secret for the RECEIVER_EMAIL variable
+          RECEIVER_EMAIL: ${{ secrets.GMAIL_RECIPIENT }}
+          
         run: node test-run.js
