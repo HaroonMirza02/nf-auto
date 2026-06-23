@@ -85,7 +85,7 @@ function buildEmail(userSections, date) {
        </table>
 
        <div style="margin-top: 30px; border-top: 1px solid #eeeeee; padding-top: 15px;">
-         <div style="font-size: 9px; font-weight: 700; color: #bbbbbb; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;">Jump to: Haroon, Zaid, Hassan, Ibrahim</div>
+         <div style="font-size: 9px; font-weight: 700; color: #bbbbbb; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;">Scroll to any user:</div>
          <div>${navItems}</div>
        </div>
     </div>
