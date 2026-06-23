@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import UserCard from './components/UserCard';
-import CountdownTimer from './components/CountdownTimer';
 import './index.css';
 
 const USERS = [
@@ -8,44 +7,44 @@ const USERS = [
         id: 'haroon',
         name: 'Haroon Mirza',
         psx_stocks: [
-            { ticker: 'SYS', current_price: 500.00, prev_price: 495.00 },
-            { ticker: 'NETSOL', current_price: 120.00, prev_price: 118.50 },
-            { ticker: 'ICI', current_price: 950.00, prev_price: 945.00 },
-            { ticker: 'LUCK', current_price: 890.00, prev_price: 885.00 },
-            { ticker: 'OGDC', current_price: 145.00, prev_price: 143.50 }
+            { ticker: 'SYS', current_price: 151.18, prev_price: 155.16 },
+            { ticker: 'NETSOL', current_price: 133.10, prev_price: 136.50 },
+            { ticker: 'ICI', current_price: 591.53, prev_price: 594.90 },
+            { ticker: 'LUCK', current_price: 462.98, prev_price: 471.00 },
+            { ticker: 'OGDC', current_price: 331.28, prev_price: 339.00 }
         ]
     },
     {
         id: 'zaid',
         name: 'Zaid Bin Asim',
         psx_stocks: [
-            { ticker: 'SYS', current_price: 500.00, prev_price: 495.00 },
-            { ticker: 'SHSML', current_price: 210.00, prev_price: 208.00 },
-            { ticker: 'NETSOL', current_price: 120.00, prev_price: 118.50 },
-            { ticker: 'OGDC', current_price: 145.00, prev_price: 143.50 },
-            { ticker: 'PSO', current_price: 410.00, prev_price: 408.00 }
+            { ticker: 'SYS', current_price: 151.18, prev_price: 155.16 },
+            { ticker: 'SHSML', current_price: 394.24, prev_price: 376.10 },
+            { ticker: 'NETSOL', current_price: 133.10, prev_price: 136.50 },
+            { ticker: 'OGDC', current_price: 331.28, prev_price: 339.00 },
+            { ticker: 'PSO', current_price: 357.14, prev_price: 360.00 }
         ]
     },
     {
         id: 'hassan',
         name: 'M. Hassan',
         psx_stocks: [
-            { ticker: 'SYS', current_price: 500.00, prev_price: 495.00 },
-            { ticker: 'PTC', current_price: 18.50, prev_price: 18.20 },
-            { ticker: 'OCTOPUS', current_price: 55.00, prev_price: 54.00 },
-            { ticker: 'TRG', current_price: 95.00, prev_price: 93.50 },
-            { ticker: 'AVN', current_price: 68.00, prev_price: 67.00 }
+            { ticker: 'SYS', current_price: 151.18, prev_price: 155.16 },
+            { ticker: 'PTC', current_price: 65.58, prev_price: 66.88 },
+            { ticker: 'OCTOPUS', current_price: 38.26, prev_price: 34.89 },
+            { ticker: 'TRG', current_price: 66.68, prev_price: 70.20 },
+            { ticker: 'AVN', current_price: 38.39, prev_price: 35.00 }
         ]
     },
     {
         id: 'ibrahim',
         name: 'Ibrahim Malik',
         psx_stocks: [
-            { ticker: 'SYS', current_price: 500.00, prev_price: 495.00 },
-            { ticker: 'PTC', current_price: 18.50, prev_price: 18.20 },
-            { ticker: 'OCTOPUS', current_price: 55.00, prev_price: 54.00 },
-            { ticker: 'TRG', current_price: 95.00, prev_price: 93.50 },
-            { ticker: 'AVN', current_price: 68.00, prev_price: 67.00 }
+            { ticker: 'SYS', current_price: 151.18, prev_price: 155.16 },
+            { ticker: 'PTC', current_price: 65.58, prev_price: 66.88 },
+            { ticker: 'OCTOPUS', current_price: 38.26, prev_price: 34.89 },
+            { ticker: 'TRG', current_price: 66.68, prev_price: 70.20 },
+            { ticker: 'AVN', current_price: 38.39, prev_price: 35.00 }
         ]
     }
 ];
@@ -54,50 +53,8 @@ function App() {
     const [psxPrices, setPsxPrices] = useState(
         Object.fromEntries(USERS.map(u => [u.id, u.psx_stocks.map(s => ({ ...s }))]))
     );
-    const [windowState, setWindowState] = useState('closed');
-    const [countdown, setCountdown] = useState('');
-    const [isUrgent, setIsUrgent] = useState(false);
     const [isSaving, setIsSaving] = useState({});
     const [saveStatus, setSaveStatus] = useState({});
-
-    useEffect(() => {
-        const tick = () => {
-            const now = new Date();
-            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            const pkt = new Date(utc + (3600000 * 5));
-
-            const day = pkt.getDay();
-            const hours = pkt.getHours();
-            const mins = pkt.getMinutes();
-            const totalMins = (hours * 60) + mins;
-
-            if (day === 0) {
-                setWindowState('sunday');
-                return;
-            }
-
-            const openTime = 8 * 60;
-            const closeTime = 10 * 60;
-
-            if (totalMins < openTime) {
-                setWindowState('before');
-            } else if (totalMins >= closeTime) {
-                setWindowState('closed');
-            } else {
-                setWindowState('open');
-                const remaining = closeTime - totalMins;
-                const h = Math.floor(remaining / 60);
-                const m = remaining % 60;
-                const s = 59 - pkt.getSeconds();
-                setCountdown(`${h}h ${m}m ${s}s`);
-                setIsUrgent(remaining < 15);
-            }
-        };
-
-        const timer = setInterval(tick, 1000);
-        tick();
-        return () => clearInterval(timer);
-    }, []);
 
     const handlePriceChange = (userId, ticker, field, value) => {
         setPsxPrices(prev => ({
@@ -163,16 +120,6 @@ function App() {
         }
     };
 
-    const getStatusText = () => {
-        switch (windowState) {
-            case 'open': return 'Entry open — closes at 10:00 AM PKT';
-            case 'before': return 'Entry opens at 8:00 AM PKT';
-            case 'closed': return "Today's digest sent. Opens tomorrow at 8:00 AM.";
-            case 'sunday': return 'No digest on Sundays. Opens Monday at 8:00 AM.';
-            default: return '';
-        }
-    };
-
     return (
         <div className="app-container">
             <header className="header">
@@ -180,7 +127,7 @@ function App() {
                 <p>PSX Stock Price Update &middot; {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </header>
 
-            <div className={`status-banner status-open`}>
+            <div className="status-banner status-open">
                 Dashboard and price entry always enabled.
             </div>
 

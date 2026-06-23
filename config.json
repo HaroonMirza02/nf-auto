@@ -1,5 +1,5 @@
 {
-    "lastUpdated": "2026-06-23T00:00:00Z",
+    "lastUpdated": "2026-06-23T12:25:00.000Z",
     "users": [
         {
             "id": "haroon",
@@ -12,28 +12,28 @@
             "psx_stocks": [
                 {
                     "ticker": "SYS",
-                    "current_price": 500.00,
-                    "prev_price": 495.00
+                    "current_price": 151.18,
+                    "prev_price": 155.16
                 },
                 {
                     "ticker": "NETSOL",
-                    "current_price": 120.00,
-                    "prev_price": 118.50
+                    "current_price": 133.10,
+                    "prev_price": 136.50
                 },
                 {
                     "ticker": "ICI",
-                    "current_price": 950.00,
-                    "prev_price": 945.00
+                    "current_price": 591.53,
+                    "prev_price": 594.90
                 },
                 {
                     "ticker": "LUCK",
-                    "current_price": 890.00,
-                    "prev_price": 885.00
+                    "current_price": 462.98,
+                    "prev_price": 471.00
                 },
                 {
                     "ticker": "OGDC",
-                    "current_price": 145.00,
-                    "prev_price": 143.50
+                    "current_price": 331.28,
+                    "prev_price": 339.00
                 }
             ],
             "us_stocks": [
@@ -55,28 +55,28 @@
             "psx_stocks": [
                 {
                     "ticker": "SYS",
-                    "current_price": 500.00,
-                    "prev_price": 495.00
+                    "current_price": 151.18,
+                    "prev_price": 155.16
                 },
                 {
                     "ticker": "SHSML",
-                    "current_price": 210.00,
-                    "prev_price": 208.00
+                    "current_price": 394.24,
+                    "prev_price": 376.10
                 },
                 {
                     "ticker": "NETSOL",
-                    "current_price": 120.00,
-                    "prev_price": 118.50
+                    "current_price": 133.10,
+                    "prev_price": 136.50
                 },
                 {
                     "ticker": "OGDC",
-                    "current_price": 145.00,
-                    "prev_price": 143.50
+                    "current_price": 331.28,
+                    "prev_price": 339.00
                 },
                 {
                     "ticker": "PSO",
-                    "current_price": 410.00,
-                    "prev_price": 408.00
+                    "current_price": 357.14,
+                    "prev_price": 360.00
                 }
             ],
             "us_stocks": [
@@ -98,28 +98,28 @@
             "psx_stocks": [
                 {
                     "ticker": "SYS",
-                    "current_price": 500.00,
-                    "prev_price": 495.00
+                    "current_price": 151.18,
+                    "prev_price": 155.16
                 },
                 {
                     "ticker": "PTC",
-                    "current_price": 18.50,
-                    "prev_price": 18.20
+                    "current_price": 65.58,
+                    "prev_price": 66.88
                 },
                 {
                     "ticker": "OCTOPUS",
-                    "current_price": 55.00,
-                    "prev_price": 54.00
+                    "current_price": 38.26,
+                    "prev_price": 34.89
                 },
                 {
                     "ticker": "TRG",
-                    "current_price": 95.00,
-                    "prev_price": 93.50
+                    "current_price": 66.68,
+                    "prev_price": 70.20
                 },
                 {
                     "ticker": "AVN",
-                    "current_price": 68.00,
-                    "prev_price": 67.00
+                    "current_price": 38.39,
+                    "prev_price": 35.00
                 }
             ],
             "us_stocks": [
@@ -135,34 +135,34 @@
             "name": "Ibrahim Malik",
             "email": "iamalik2005@gmail.com",
             "sources": [
-                "business-recorder",
+                "brecorder",
                 "reuters"
             ],
             "psx_stocks": [
                 {
                     "ticker": "SYS",
-                    "current_price": 500.00,
-                    "prev_price": 495.00
+                    "current_price": 151.18,
+                    "prev_price": 155.16
                 },
                 {
                     "ticker": "PTC",
-                    "current_price": 18.50,
-                    "prev_price": 18.20
+                    "current_price": 65.58,
+                    "prev_price": 66.88
                 },
                 {
                     "ticker": "OCTOPUS",
-                    "current_price": 55.00,
-                    "prev_price": 54.00
+                    "current_price": 38.26,
+                    "prev_price": 34.89
                 },
                 {
                     "ticker": "TRG",
-                    "current_price": 95.00,
-                    "prev_price": 93.50
+                    "current_price": 66.68,
+                    "prev_price": 70.20
                 },
                 {
                     "ticker": "AVN",
-                    "current_price": 68.00,
-                    "prev_price": 67.00
+                    "current_price": 38.39,
+                    "prev_price": 35.00
                 }
             ],
             "us_stocks": [
