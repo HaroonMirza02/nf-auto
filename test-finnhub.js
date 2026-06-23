@@ -1,6 +1,6 @@
-const API_KEY = 'd8emu7pr01qth3ci90l0d8emu7pr01qth3ci90lg';
+
 const symbol = 'AAPL';
-const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${API_KEY}`;
+const url = `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${process.env.FINNHUB_KEY}`;
 
 async function testFinnhub() {
     try {

@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const FINNHUB_KEY = 'd8emu7pr01qth3ci90l0d8emu7pr01qth3ci90lg';
+const FINNHUB_KEY = process.env.FINNHUB_KEY;
 
 // Global cache to save credits
 const stockCache = {};
