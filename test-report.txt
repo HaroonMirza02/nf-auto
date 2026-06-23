@@ -1,0 +1,24 @@
+
+=== KEY CHECK ===
+NEWSDATA_API_KEY: SET (pub_5de3...)
+ALPHA_VANTAGE_KEY: SET (9QEU005O...)
+GOOGLE_AI_KEY: SET (AQ.Ab8RN...)
+
+=== TEST 1: NewsData.io (domain filter: reuters.com,techcrunch.com) ===
+HTTP Status: 200
+API Status: success
+Articles returned: 3
+First title: Rangnick questions opening goal after loss to Messi-led Argentina
+
+=== TEST 2: NewsData.io (q=technology, no domain) ===
+HTTP Status: 200
+API Status: success
+Articles returned: 3
+
+=== TEST 3: Alpha Vantage (MSFT) ===
+MSFT Price: 367.3400
+
+=== TEST 4: Gemini AI ===
+Gemini response: API_OK
+
+=== DONE ===

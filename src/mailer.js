@@ -1,7 +1,7 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-async function sendDigest(emailHtml) {
+async function sendDigest(emailHtml, recipientOverride, dateOverride) {
     const {
         SMTP_HOST,
         SMTP_PORT,
@@ -19,6 +19,9 @@ async function sendDigest(emailHtml) {
         year: 'numeric'
     });
 
+    const displayDate = dateOverride || dateStr;
+    const recipient = recipientOverride || RECEIVER_EMAIL;
+
     const transporter = nodemailer.createTransport({
         host: SMTP_HOST,
         port: parseInt(SMTP_PORT || "587"),
@@ -31,8 +34,8 @@ async function sendDigest(emailHtml) {
 
     const mailOptions = {
         from: `"NewsFlash Auto" <${SMTP_USER}>`,
-        to: RECEIVER_EMAIL,
-        subject: `⚡ NewsFlash Auto — [${dateStr}]`,
+        to: recipient,
+        subject: `⚡ NewsFlash Auto — [${displayDate}]`,
         html: emailHtml
     };
 
