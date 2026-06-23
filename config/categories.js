@@ -12,9 +12,9 @@ module.exports = [
     id: 'pakistan',
     label: 'Pakistan News',
     queries: [
-      { language: 'en', q: 'Pakistan technology Islamabad Karachi Lahore', size: 5 },
-      { language: 'en', q: 'Pakistan startup ecosystem tech', size: 5 },
-      { language: 'en', q: 'Pakistan digital transformation government', size: 5 }
+      { language: 'en', q: 'Pakistan technology Islamabad Karachi Lahore IT', size: 10 },
+      { language: 'en', q: 'Pakistan startup software engineering digital', size: 10 },
+      { language: 'en', q: 'Pakistan government circular debt economy tech', size: 10 }
     ]
   },
   {

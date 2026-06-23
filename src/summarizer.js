@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const GOOGLE_AI_KEY = process.env.GOOGLE_AI_KEY;
-const MODEL = 'gemini-2.5-flash';
+const MODEL = 'gemini-3.1-flash-lite';
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${GOOGLE_AI_KEY}`;
 
 async function summarizeAll(collectedData) {
@@ -27,10 +27,11 @@ ${articleList}
 
 CRITICAL INSTRUCTIONS:
 - Return ONLY a <ul> list with <li> items. 
-- For each article, write EXACTLY ONE short, high-impact sentence (max 20 words).
-- BOLD 2-3 key terms using ONLY <b> tags. 
-- NEVER use markdown like **. NEVER use code fences.
-- Strictly tech/innovation focus.
+- For each article, write EXACTLY ONE short sentence (max 18 words) focusing on TECH/BUSINESS value.
+- YOU MUST BOLD exactly 2-3 key terms using HTML <b> tags (e.g. <b>Nvidia</b>).
+- ABSOLUTELY NO markdown (no **), no code fences, no extra text.
+- No job postings or recruitment mentions.
+- If news is not tech-related, simplify it to its technical essence.
 - After the sentence, add source and link: <a href="URL">Read more</a>
 - Example: <b>Apple</b> is launching a new <b>AI chip</b> for the iPhone 17. TechCrunch: <a href="url">Read more</a>`;
 
@@ -73,8 +74,8 @@ CRITICAL INSTRUCTIONS:
             });
         }
 
-        // 2000ms delay for Google AI (limits are usually generous)
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Increase delay to 12s to safely stay under free-tier RPM limits
+        await new Promise(resolve => setTimeout(resolve, 12000));
     }
 
     return summarizedResults;

@@ -66,10 +66,49 @@ async function collectAllCategories() {
             [deduplicated[i], deduplicated[j]] = [deduplicated[j], deduplicated[i]];
         }
 
-        // Take top 6
-        const articles = deduplicated.slice(0, 6);
+        // Shuffling and filtering
+        let articles = deduplicated;
 
-        console.log(`[${new Date().toISOString()}] ${category.label}: ${articles.length} articles selected after deduplication and shuffle`);
+        // 1. Editorial Filter (Remove Hiring, Sports, Fashion, Showbiz, and Marketing spam)
+        const editorialNoise = [
+            'hiring', 'looking for', 'vacancy', 'career', 'recruiting', // Jobs
+            'auction', 'collectible', 'vintage', 'sale', 'deal', ' Father\'s Day', // Commercial
+            'cycling', 'tournament', 'match', 'olympics', 'league', 'race', // Sports
+            'fashion', 'beauty', 'showbiz', 'celebrity', 'entertainment', 'luxury', // Lifestyle
+            'market size', 'market report', 'cagr', 'market projected', 'forecast to reach', // Market Spam
+            'horoscope', 'recipe', 'lifestyle' // Others
+        ];
+
+        // 2. Source Filter (Remove known press-release/SEO spam outlets)
+        const bannedSources = ['openpr.com', 'einnews.com', 'marketwatch.com', 'bringatrailer.com', 'cyclingnews.com'];
+
+        articles = articles.filter(a => {
+            const text = (a.title + ' ' + a.description).toLowerCase();
+            const source = a.source.toLowerCase();
+
+            const hasNoise = editorialNoise.some(k => text.includes(k));
+            const isBannedSource = bannedSources.some(s => source.includes(s) || a.url.toLowerCase().includes(s));
+
+            return !hasNoise && !isBannedSource;
+        });
+
+        // 3. Strict Category Filters
+        if (category.id === 'pakistan') {
+            const pkKeywords = ['pakistan', 'islamabad', 'karachi', 'lahore', 'peshawar', 'quetta', 'sindh', 'punjab', 'kpk', 'balochistan'];
+            const techKeywords = ['tech', 'digital', 'software', 'innovation', 'startup', 'telecom', 'ai', 'internet', 'broadband', 'fintech', 'automation'];
+
+            articles = articles.filter(a => {
+                const text = (a.title + ' ' + a.description).toLowerCase();
+                const hasLocation = pkKeywords.some(k => text.includes(k));
+                const hasTech = techKeywords.some(k => text.includes(k));
+                return hasLocation && hasTech;
+            });
+        }
+
+        // Limit the final count to 5 high-quality articles
+        articles = articles.slice(0, 5);
+
+        console.log(`[${new Date().toISOString()}] ${category.label}: ${articles.length} clean articles selected.`);
 
         results.push({ category, articles });
     }
