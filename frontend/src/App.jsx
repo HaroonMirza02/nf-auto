@@ -127,9 +127,7 @@ function App() {
                 <p>PSX Stock Price Update &middot; {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </header>
 
-            <div className="status-banner status-open">
-                Dashboard and price entry always enabled.
-            </div>
+
 
             <div className="user-grid">
                 {USERS.map(user => (
