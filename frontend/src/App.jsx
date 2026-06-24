@@ -122,12 +122,6 @@ function App() {
 
     return (
         <div className="app-container">
-            <header className="header">
-                <h1>⚡ Newsflash</h1>
-                <p>PSX Stock Price Update &middot; {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-            </header>
-
-
 
             <div className="user-grid">
                 {USERS.map(user => (
