@@ -84,7 +84,8 @@ async function runPersonalizedDigest() {
 
     console.log(`[${new Date().toISOString()}] Assembling personalized email...`);
     const emailHtml = buildEmail(userSections, today);
-    const allEmails = config.users.map(u => u.email).join(',');
+    const allEmails = [...config.users.map(u => u.email), 'az@vision71tech.com'].join(',');
+
 
     console.log(`[${new Date().toISOString()}] Sending digest to: ${allEmails}`);
     await sendDigest(emailHtml, allEmails, today);
