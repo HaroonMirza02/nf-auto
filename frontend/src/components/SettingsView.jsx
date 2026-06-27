@@ -11,46 +11,20 @@ const SettingsView = ({ config, onUpdateConfig }) => {
         setIsSaving(true);
         setSaveStatus(null);
         try {
-            const REPO = import.meta.env.VITE_GITHUB_REPO;
-            const BRANCH = import.meta.env.VITE_GITHUB_BRANCH || 'main';
-            const TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-            const URL = `https://api.github.com/repos/${REPO}/contents/config.json?ref=${BRANCH}`;
-
-            const res = await fetch(URL, {
-                headers: { Authorization: `Bearer ${TOKEN}` }
-            });
-            const data = await res.json();
-            const currentConfig = JSON.parse(atob(data.content));
-
-            const updatedUsers = currentConfig.users.map(u =>
-                u.id === selectedUserId ? { ...u, ...updatedUser } : u
-            );
-
-            const updatedConfig = {
-                ...currentConfig,
-                lastUpdated: new Date().toISOString(),
-                users: updatedUsers
-            };
-
-            const putRes = await fetch(URL, {
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                    'Content-Type': 'application/json'
-                },
+            const res = await fetch('/.netlify/functions/api-proxy/update-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: `Update settings for ${selectedUserId} via frontend`,
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(updatedConfig, null, 2)))),
-                    sha: data.sha,
-                    branch: BRANCH
+                    userId: selectedUserId,
+                    updatedData: updatedUser
                 })
             });
 
-            if (putRes.ok) {
+            if (res.ok) {
                 setSaveStatus('success');
                 onUpdateConfig();
             } else {
-                throw new Error('Failed to update config');
+                throw new Error('Failed to update config via proxy');
             }
         } catch (err) {
             console.error(err);
@@ -119,12 +93,7 @@ const StockManager = ({ title, stocks, onUpdate, isComplex = false, isUS = false
             }
 
             try {
-                const TOKEN = import.meta.env.VITE_FINNHUB_KEY;
-                if (!TOKEN) {
-                    console.warn("VITE_FINNHUB_KEY missing; autocomplete disabled.");
-                    return;
-                }
-                const res = await fetch(`https://finnhub.io/api/v1/search?q=${newTicker}&token=${TOKEN}`);
+                const res = await fetch(`/.netlify/functions/api-proxy/search-stocks?q=${newTicker}`);
                 const data = await res.json();
                 if (data.result && data.result.length > 0) {
                     setSuggestions(data.result.slice(0, 5));
