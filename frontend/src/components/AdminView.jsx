@@ -14,17 +14,29 @@ const AdminView = ({ config }) => {
         setIsLoadingReport(true);
         try {
             const REPO = import.meta.env.VITE_GITHUB_REPO;
-            const URL = `https://api.github.com/repos/${REPO}/contents/data/latest_digest.html`;
+            const TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+            const BRANCH = import.meta.env.VITE_GITHUB_BRANCH || 'main';
+            // Add timestamp to bypass GitHub API cache
+            const URL = `https://api.github.com/repos/${REPO}/contents/data/latest_digest.html?ref=${BRANCH}&t=${Date.now()}`;
 
             const res = await fetch(URL, {
-                headers: { Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}` }
+                headers: { Authorization: `Bearer ${TOKEN}` }
             });
+
+            if (!res.ok) {
+                if (res.status === 404) throw new Error("Report file not found on GitHub.");
+                throw new Error(`GitHub API error: ${res.status}`);
+            }
+
             const data = await res.json();
             if (data.content) {
-                setReportHtml(atob(data.content));
+                // Remove whitespace/newlines from base64 content before decoding
+                const cleanedContent = data.content.replace(/\s/g, '');
+                setReportHtml(decodeURIComponent(escape(atob(cleanedContent))));
             }
         } catch (err) {
             console.error('Failed to fetch report:', err);
+            setReportHtml(`Error: ${err.message}`);
         } finally {
             setIsLoadingReport(false);
         }

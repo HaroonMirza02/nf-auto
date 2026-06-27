@@ -90,6 +90,11 @@ async function runPersonalizedDigest() {
     console.log(`[${new Date().toISOString()}] Sending digest to: ${allEmails}`);
     await sendDigest(emailHtml, allEmails, today);
 
+    // Save for Admin Preview
+    const dataDir = path.join(__dirname, '..', 'data');
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+    fs.writeFileSync(path.join(dataDir, 'latest_digest.html'), emailHtml);
+
     console.log(`[${new Date().toISOString()}] Personalized Digest Run Complete.`);
 }
 

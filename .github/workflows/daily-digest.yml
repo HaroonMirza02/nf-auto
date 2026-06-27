@@ -40,3 +40,11 @@ jobs:
           RECEIVER_EMAIL: ${{ secrets.GMAIL_RECIPIENT }}
           
         run: node test-run.js
+
+      - name: Commit and Push latest report
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/latest_digest.html
+          git commit -m "Update latest digest report [skip ci]" || echo "No changes to commit"
+          git push
