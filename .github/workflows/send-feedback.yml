@@ -1,0 +1,33 @@
+name: Send Feedback Email
+
+on:
+  workflow_dispatch:
+    inputs:
+      user_email:
+        description: 'User email'
+        required: true
+      user_name:
+        description: 'User name'
+        required: true
+      feedback:
+        description: 'Feedback text'
+        required: true
+
+jobs:
+  send-feedback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install
+      - run: node src/sendFeedback.js
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          FEEDBACK_USER_EMAIL: ${{ github.event.inputs.user_email }}
+          FEEDBACK_USER_NAME: ${{ github.event.inputs.user_name }}
+          FEEDBACK_TEXT: ${{ github.event.inputs.feedback }}
