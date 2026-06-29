@@ -4,10 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       user_email:
-        description: 'User email'
+        description: 'User email (who the feedback is about)'
         required: true
       user_name:
-        description: 'User name'
+        description: 'User name (who the feedback is about)'
+        required: true
+      all_emails:
+        description: 'All user emails (comma-separated, to send to everyone)'
         required: true
       feedback:
         description: 'Feedback text'
@@ -30,4 +33,5 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           FEEDBACK_USER_EMAIL: ${{ github.event.inputs.user_email }}
           FEEDBACK_USER_NAME: ${{ github.event.inputs.user_name }}
+          FEEDBACK_ALL_EMAILS: ${{ github.event.inputs.all_emails }}
           FEEDBACK_TEXT: ${{ github.event.inputs.feedback }}
