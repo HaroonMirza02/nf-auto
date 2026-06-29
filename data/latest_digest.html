@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechNews Digest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #fafafa;
+      margin: 0;
+      padding: 40px 20px;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    a {
+      color: #111111;
+      text-decoration: underline;
+      font-weight: 400;
+    }
+    
+    a:hover {
+      opacity: 0.6;
+    }
+    
+    h1, h2, h3 {
+      display: none !important;
+    }
+    
+    p {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin-bottom: 16px;
+      font-size: 15px;
+      font-weight: 200;
+      line-height: 1.75;
+      color: #111111;
+    }
+    
+    ul, ol {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+    
+    li {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 200;
+      line-height: 1.6;
+      color: #111111;
+    }
+
+    .category-title {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-size: 22px;
+      font-weight: normal;
+      color: #111111;
+      text-transform: uppercase;
+    }
+
+    /* Hide headlines and metadata panels from dynamic HTML */
+    .news-meta, .news-title {
+      display: none !important;
+    }
+
+    .news-summary {
+      font-size: 15px;
+      font-weight: 200;
+      color: #111111;
+      line-height: 1.75;
+      max-width: 600px;
+      margin-bottom: 18px;
+    }
+
+    .source-toggle-btn {
+      font-size: 10px;
+      font-weight: 400;
+      color: #111111;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .source-details {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background-color: #fafafa;
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-top: 12px;
+    }
+
+    .via-label {
+      font-size: 9px;
+      font-weight: 400;
+      color: #bbbbbb;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .source-link {
+      font-size: 12px;
+      font-weight: 400;
+      color: #333333;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 10px !important;
+      }
+      .email-wrapper {
+        border-radius: 6px !important;
+      }
+      .header-area {
+        padding: 24px 20px 20px !important;
+      }
+      .body-container {
+        padding: 24px 20px !important;
+      }
+      .footer-area {
+        padding: 20px 20px !important;
+      }
+      .category-title { font-size: 18px !important; }
+      p, .news-summary { font-size: 14px !important; line-height: 1.6 !important; }
+      .ticker-note-cell {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body style="background-color: #fafafa; margin: 0; padding: 40px 20px; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div class="email-wrapper" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #f0f0f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); overflow: hidden;">
+    
+    <!-- Header -->
+    <div class="header-area" style="padding: 32px 32px 24px; border-bottom: 1px solid #f0f0f0; background-color: #ffffff; text-align: left;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td>
+            <div style="font-size: 13px; font-weight: 300; letter-spacing: 6px; color: #111111; text-transform: uppercase; line-height: 1;">TECHNEWS</div>
+            <div style="font-size: 11px; font-weight: 200; color: #000000ff; margin-top: 6px; letter-spacing: 1px; text-transform: uppercase;">Vision71 Daily Digest</div>
+          </td>
+          <td align="right" valign="bottom" style="font-size: 10px; font-weight: 200; color: #000000ff; letter-spacing: 1px; text-transform: uppercase; text-align: right;">
+            Wednesday, June 24, 2026
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- Content Section -->
+    <div class="body-container" style="padding: 32px; background-color: #ffffff;">
+      
+    <div style="margin-bottom: 32px;">
+      <!-- Category Meta -->
+      <div style="margin-bottom: 14px;">
+        <span class="category-title" style="font-size: 22px; font-weight: normal; color: #111111; text-transform: uppercase; display: inline-block; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Global News</span>
+      </div>
+      <!-- Section Content -->
+      <div class="content-area" style="font-size: 15px; font-weight: 300; color: #111111; line-height: 1.75;">
+        <ul>
+<li>A <b>Chinese supercomputer</b> has officially regained the title of the world’s <b>fastest machine</b>. Mankato Free Press: <a href="https://www.mankatofreepress.com/news/business/ap-business-summarybrief-at-7-03-p-m-edt/article_947a159c-1b91-5691-8a63-b04bb7aad43c.html">Read more</a></li>
+<li><b>Advanced adhesives</b> from South Africa now provide critical structural support for the iconic <b>Sagrada Familia</b>. Gadget: <a href="https://gadget.co.za/techtouristsite85w/">Read more</a></li>
+<li>Children's authors are launching a <b>crowdfunded campaign</b> to challenge <b>generative AI</b> firms over copyright theft. Complete Ai Training: <a href="https://completeaitraining.com/news/childrens-authors-and-illustrators-launch-we-are-better/">Read more</a></li>
+<li><b>India</b> secures 13th place globally for <b>AI readiness</b> despite ongoing challenges in workforce skills alignment. Hindustan Times: <a href="https://www.hindustantimes.com/india-news/india-ranks-13th-in-world-future-skills-index-101782241303849.html">Read more</a></li>
+<li>Political leadership <b>polling data</b> remains a key indicator for evaluating current government <b>economic strategy</b> effectiveness. Newstalkzb: <a href="https://www.newstalkzb.co.nz/news/politics/election-2026-national-mps-back-christopher-luxon-after-poor-poll-one-says-he-hasn-t-put-a-foot-wrong/">Read more</a></li>
+</ul>
+      </div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #f2f2f2; margin: 32px 0;">
+  
+    <div style="margin-bottom: 32px;">
+      <!-- Category Meta -->
+      <div style="margin-bottom: 14px;">
+        <span class="category-title" style="font-size: 22px; font-weight: normal; color: #111111; text-transform: uppercase; display: inline-block; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Pakistan News</span>
+      </div>
+      <!-- Section Content -->
+      <div class="content-area" style="font-size: 15px; font-weight: 300; color: #111111; line-height: 1.75;">
+        <p>No articles found for Pakistan News today.</p>
+      </div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #f2f2f2; margin: 32px 0;">
+  
+    <div style="margin-bottom: 32px;">
+      <!-- Category Meta -->
+      <div style="margin-bottom: 14px;">
+        <span class="category-title" style="font-size: 22px; font-weight: normal; color: #111111; text-transform: uppercase; display: inline-block; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Technology</span>
+      </div>
+      <!-- Section Content -->
+      <div class="content-area" style="font-size: 15px; font-weight: 300; color: #111111; line-height: 1.75;">
+        <ul>
+<li>The White House issued an <b>Executive Order</b> to accelerate <b>post-quantum cryptography</b> readiness against advanced cyber threats. IT Security News: <a href="https://www.itsecuritynews.info/new-executive-order-accelerates-post-quantum-readiness-amid-the-cryptographic-reset/">Read more</a></li>
+<li>Major tech firms including <b>Cisco</b> and <b>Snap</b> are implementing layoffs as they shift focus toward AI integration. Insider: <a href="https://www.businessinsider.com/list-companies-replacing-human-employees-with-ai-layoffs-workforce-reductions/">Read more</a></li>
+<li><b>WhatsApp</b> and <b>Meta</b> services experienced a widespread global outage disrupting messaging and audio features for millions. Mix Vale: <a href="https://www.mixvale.com.br/2026/06/23/whatsapp-and-other-meta-applications-report-widespread-instability-this-tuesday-23-en/">Read more</a></li>
+<li>Enterprises should adopt <b>Data Mesh</b> and <b>Knowledge Graphs</b> to establish robust architectures for scalable AI readiness. SAP: <a href="https://community.sap.com/t5/data-professionals-knowledge-base/strategic-data-paradigms-for-building-ai-ready-it-systems-nbsp/ta-p/14380989">Read more</a></li>
+<li><b>BlackRock</b> released a <b>financial report</b> detailing mid-year investment performance and institutional asset management results. Finanznachrichten.de: <a href="https://www.finanznachrichten.de/nachrichten-2026-06/68841345-blackrock-income-and-growth-investment-trust-plc-half-year-financial-report-008.htm">Read more</a></li>
+</ul>
+      </div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #f2f2f2; margin: 32px 0;">
+  
+    <div style="margin-bottom: 32px;">
+      <!-- Category Meta -->
+      <div style="margin-bottom: 14px;">
+        <span class="category-title" style="font-size: 22px; font-weight: normal; color: #111111; text-transform: uppercase; display: inline-block; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Artificial Intelligence</span>
+      </div>
+      <!-- Section Content -->
+      <div class="content-area" style="font-size: 15px; font-weight: 300; color: #111111; line-height: 1.75;">
+        <ul>
+<li><b>Dell</b> and <b>AMD</b> are collaborating to scale hybrid AI factory architectures for enterprise workloads. Siliconangle: <a href="https://siliconangle.com/2026/06/23/dell-amd-partnership-hybrid-architecture-delltechworld/">Read more</a></li>
+<li><b>D-Wave Quantum</b> shares rose 2.2% following a significant spike in daily trading volume. Watch List News: <a href="https://www.watchlistnews.com/d-wave-quantum-nyseqbts-shares-up-2-2-whats-next/11124944.html">Read more</a></li>
+<li>India’s <b>AI roadmap</b> aims to prioritize domestic utility over merely replicating existing <b>ChatGPT</b>-style LLMs. Analytics India Magazine: <a href="https://analyticsindiamag.com/ai-features/indias-ai-opportunity-is-bigger-than-building-another-chatgpt">Read more</a></li>
+<li><b>OpenX</b> introduced <b>AI-driven</b> machine learning tools to optimize automated media decisioning for advertisers. Postregister: <a href="https://www.postregister.com/businessreport/technology/openx-launches-openx-iq-a-suite-of-ai-and-machine-learning-capabilities-to-power-customized/article_cb3f8576-b1cc-560b-9777-dce964def299.html">Read more</a></li>
+<li>Recent <b>Oracle</b> workforce reductions highlight the internal financial pressures of its aggressive <b>AI pivot</b>. Investing Us: <a href="https://www.investing.com/analysis/oracle-workforce-cuts-show-the-hidden-cost-of-its-ai-pivot-200682656">Read more</a></li>
+</ul>
+      </div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #f2f2f2; margin: 32px 0;">
+  
+    <div style="margin-bottom: 32px;">
+      <!-- Category Meta -->
+      <div style="margin-bottom: 14px;">
+        <span class="category-title" style="font-size: 22px; font-weight: normal; color: #111111; text-transform: uppercase; display: inline-block; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">Business</span>
+      </div>
+      <!-- Section Content -->
+      <div class="content-area" style="font-size: 15px; font-weight: 300; color: #111111; line-height: 1.75;">
+        <ul>
+<li><b>Baseten</b> secures $1.5B at a $13B valuation, highlighting shifting investor focus toward <b>AI infrastructure</b>. Tekedia: <a href="https://www.tekedia.com/ai-startup-baseten-announces-1-5bn-round-hits-13bn-valuation/">Read more</a></li>
+<li><b>Bank of America</b> upgrades its price target for <b>Micron</b> stock amid surging semiconductor market demand. Thestreet: <a href="https://www.thestreet.com/investing/stocks/mu-micron-stock-price-target-bank-of-america-raises-june-2026">Read more</a></li>
+<li><b>Stark Defence</b> raises €500M at a €3.5B valuation to advance its <b>defense technology</b> initiatives. Bundle: <a href="https://www.bundle.app/en/technology/stark-defence-raises-500m-led-by-sequoia-and-founders-fund-at-a-valuation-above-35-billion-34627ABC-F8A7-43C8-825B-4E0BC112C355">Read more</a></li>
+<li><b>Shell</b> debuts a concept car using <b>thermal management</b> fluids to optimize <b>EV charging</b> and efficiency. Finanznachrichten.de: <a href="https://www.finanznachrichten.de/nachrichten-2026-06/68845085-shell-lubricants-shell-unveils-its-triple-10-challenge-concept-car-399.htm">Read more</a></li>
+<li>Experts argue <b>Canada</b> possesses the <b>AI talent</b> required for a boom but lacks a cohesive national strategy. Digital Journal: <a href="https://www.digitaljournal.com/article/canada-has-everything-for-an-ai-startup-boom-except-the-strategy/">Read more</a></li>
+</ul>
+      </div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #f2f2f2; margin: 32px 0;">
+  
+    </div>
+    
+    <!-- Footer Section -->
+    <div class="footer-area" style="padding: 24px 32px; background-color: #fafafa; border-top: 1px solid #f0f0f0; text-align: left;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td style="padding-bottom: 12px;">
+            <span style="font-size: 10px; font-weight: 300; color: #bbbbbb; letter-spacing: 1.5px; text-transform: uppercase; display: inline-block;">TECHNEWS · AUTOMATED DIGEST</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size: 11px; font-weight: 200; color: #aaaaaa; line-height: 1.5;">
+            Powered by NewsFlash Auto Engine &middot; Node.js &middot; OpenRouter
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size: 10px; font-weight: 200; color: #bbbbbb; line-height: 1.5; padding-top: 8px;">
+            You are receiving this because you are subscribed to Vision71 internal digests.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>
