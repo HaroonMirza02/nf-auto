@@ -86,6 +86,60 @@ const AdminView = ({ config }) => {
         }
     };
 
+    const getFilteredReport = () => {
+        if (!reportHtml) return '';
+        if (reportHtml.startsWith('Error:')) return `<p style="color: red; padding: 20px;">${reportHtml}</p>`;
+
+        try {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(reportHtml, 'text/html');
+
+            // Find the anchor for the selected user
+            const anchor = doc.querySelector(`a[name="section-${selectedUserId}"]`);
+            if (!anchor) return `<div style="padding: 20px; font-family: sans-serif; color: #666;">No report section generated for ${currentUser?.name || selectedUserId} yet.</div>`;
+
+            // get the next sibling, which is the div container for that user's digest
+            let userDiv = anchor.nextElementSibling;
+
+            // Just in case it's not a div, find the nearest element
+            while (userDiv && userDiv.tagName !== 'DIV') {
+                userDiv = userDiv.nextElementSibling;
+            }
+
+            if (!userDiv) return `<div style="padding: 20px; font-family: sans-serif; color: #666;">No content found for user ${selectedUserId}.</div>`;
+
+            // Extract global CSS and styles
+            const styles = doc.head ? doc.head.innerHTML : '';
+
+            // Extract the general branding header (contains "TechNews" and the date)
+            const brandHeader = doc.querySelector('div[style*="padding: 0 0 40px;"]') ||
+                doc.querySelector('div[style*="padding: 0 0 40px"]');
+            const brandHtml = brandHeader ? brandHeader.outerHTML : '';
+
+            return `
+                <!DOCTYPE html>
+                <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        ${styles}
+                        <style>
+                            body { background-color: #ffffff !important; padding: 20px !important; }
+                        </style>
+                    </head>
+                    <body>
+                        <div style="max-width: 600px; margin: 0 auto;">
+                            ${brandHtml}
+                            ${userDiv.outerHTML}
+                        </div>
+                    </body>
+                </html>
+            `;
+        } catch (err) {
+            console.error('Filtering error:', err);
+            return reportHtml; // Fallback to full report on error
+        }
+    };
+
     return (
         <div className="admin-container">
             <div className="view-header">
@@ -107,7 +161,7 @@ const AdminView = ({ config }) => {
                         <h3>User Info</h3>
                         <p><strong>Name:</strong> {currentUser?.name}</p>
                         <p><strong>Email:</strong> {currentUser?.email}</p>
-                        <p><strong>Stocks:</strong> {currentUser?.psx_stocks.length} PSX, {currentUser?.us_stocks.length} US</p>
+                        <p><strong>Stocks:</strong> {currentUser?.psx_stocks ? currentUser.psx_stocks.length : 0} PSX, {currentUser?.us_stocks ? currentUser.us_stocks.length : 0} US</p>
                     </div>
 
                     <div className="settings-card feedback-card">
@@ -132,14 +186,14 @@ const AdminView = ({ config }) => {
                 </div>
 
                 <div className="report-preview">
-                    <h3>Last Generated Report</h3>
+                    <h3>Report Preview for {currentUser?.name}</h3>
                     {isLoadingReport ? (
                         <p>Loading report preview...</p>
                     ) : reportHtml ? (
                         <div className="report-frame-container">
                             <iframe
                                 title="Report Preview"
-                                srcDoc={reportHtml}
+                                srcDoc={getFilteredReport()}
                                 className="report-iframe"
                             />
                         </div>
