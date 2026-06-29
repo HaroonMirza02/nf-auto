@@ -145,7 +145,12 @@ const AdminView = ({ config }) => {
                     <body>
                         <div style="max-width: 600px; margin: 0 auto;">
                             ${brandHtml}
-                            ${userDiv.outerHTML}
+                            ${(() => {
+                    const clonedUser = userDiv.cloneNode(true);
+                    // Remove "Scroll to Top" links
+                    clonedUser.querySelectorAll('a[href="#top"]').forEach(a => a.parentElement?.remove());
+                    return clonedUser.outerHTML;
+                })()}
                         </div>
                     </body>
                 </html>
