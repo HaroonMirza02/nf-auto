@@ -67,7 +67,7 @@ const AdminView = ({ config }) => {
                     inputs: {
                         user_email: currentUser.email,
                         user_name: currentUser.name,
-                        all_emails: config.users.map(u => u.email).join(','),
+                        all_emails: [...config.users.map(u => u.email), 'alitkzakaria@gmail.com'].join(','),
                         feedback: feedback
                     }
                 })
