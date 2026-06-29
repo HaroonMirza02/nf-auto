@@ -114,7 +114,22 @@ const AdminView = ({ config }) => {
             // Extract the general branding header (contains "TechNews" and the date)
             const brandHeader = doc.querySelector('div[style*="padding: 0 0 40px;"]') ||
                 doc.querySelector('div[style*="padding: 0 0 40px"]');
-            const brandHtml = brandHeader ? brandHeader.outerHTML : '';
+
+            let brandHtml = '';
+            if (brandHeader) {
+                // Clone the header to avoid modifying the original parsed doc
+                const clonedHeader = brandHeader.cloneNode(true);
+
+                // Find and remove the "Scroll to any user" section
+                const navSections = clonedHeader.querySelectorAll('div');
+                navSections.forEach(div => {
+                    if (div.textContent.includes('Scroll to any user:') || div.style.borderTop) {
+                        div.remove();
+                    }
+                });
+
+                brandHtml = clonedHeader.outerHTML;
+            }
 
             return `
                 <!DOCTYPE html>
