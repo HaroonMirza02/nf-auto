@@ -23,7 +23,7 @@ async function sendFeedback() {
     `;
 
     try {
-        await sendDigest(html, userEmail, "NewsData.io Admin Feedback");
+        await sendDigest(html, userEmail, "Admin Feedback");
         console.log(`Feedback sent successfully to ${userEmail}`);
     } catch (error) {
         console.error("Failed to send feedback:", error);
