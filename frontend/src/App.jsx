@@ -12,16 +12,20 @@ function App() {
     const [saveStatus, setSaveStatus] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
-    const fetchConfig = async () => {
-        setIsLoading(true);
+    const fetchConfig = async (showLoader = false) => {
+        if (showLoader) setIsLoading(true);
         try {
             const REPO = import.meta.env.VITE_GITHUB_REPO;
             const BRANCH = import.meta.env.VITE_GITHUB_BRANCH || 'main';
             const TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-            const URL = `https://api.github.com/repos/${REPO}/contents/config.json?ref=${BRANCH}`;
+            const URL = `https://api.github.com/repos/${REPO}/contents/config.json?ref=${BRANCH}&t=${Date.now()}`;
 
             const res = await fetch(URL, {
-                headers: { Authorization: `Bearer ${TOKEN}` }
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                    'Cache-Control': 'no-cache',
+                    Pragma: 'no-cache'
+                }
             });
             const data = await res.json();
             const currentConfig = JSON.parse(atob(data.content));
@@ -36,12 +40,12 @@ function App() {
         } catch (err) {
             console.error('Failed to fetch config:', err);
         } finally {
-            setIsLoading(false);
+            if (showLoader || !config) setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchConfig();
+        fetchConfig(true);
     }, []);
 
     const handlePriceChange = (userId, ticker, field, value) => {
@@ -67,7 +71,7 @@ function App() {
 
             if (res.ok) {
                 setSaveStatus(prev => ({ ...prev, [userId]: 'success' }));
-                fetchConfig(); // Refresh local config
+                fetchConfig(false); // Silent refresh local config
             } else {
                 throw new Error('Failed to update config via proxy');
             }

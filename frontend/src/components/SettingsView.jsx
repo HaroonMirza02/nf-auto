@@ -22,7 +22,7 @@ const SettingsView = ({ config, onUpdateConfig }) => {
 
             if (res.ok) {
                 setSaveStatus('success');
-                onUpdateConfig();
+                await onUpdateConfig(false);
             } else {
                 throw new Error('Failed to update config via proxy');
             }
@@ -234,8 +234,13 @@ const StockManager = ({ title, stocks, onUpdate, isComplex = false, isUS = false
 };
 
 const SourceManager = ({ sources, onUpdate }) => {
-    const [newSource, setNewSource] = useState('');
-    const ALL_SOURCES = ["reuters", "techcrunch", "dawn", "bloomberg", "cnbc", "ft", "brecorder", "tribune", "wsj"];
+    const SOURCES_BY_CATEGORY = {
+        'Global News': ['reuters', 'ap', 'bbc', 'wsj', 'guardian'],
+        'Pakistan News': ['dawn', 'brecorder', 'tribune', 'geo-news', 'the-news'],
+        Technology: ['techcrunch', 'theverge', 'wired', 'ars-technica', 'zdnet'],
+        AI: ['venturebeat', 'mitreview', 'zdnet', 'analytics-india-mag', 'synced'],
+        Business: ['bloomberg', 'cnbc', 'ft', 'forbes', 'fortune']
+    };
 
     const toggleSource = (src) => {
         if (sources.includes(src)) {
@@ -248,17 +253,22 @@ const SourceManager = ({ sources, onUpdate }) => {
     return (
         <div className="settings-card">
             <h3>News Sources</h3>
-            <div className="source-grid">
-                {ALL_SOURCES.map(src => (
-                    <div
-                        key={src}
-                        className={`source-item ${sources.includes(src) ? 'active' : ''}`}
-                        onClick={() => toggleSource(src)}
-                    >
-                        {src}
+            {Object.entries(SOURCES_BY_CATEGORY).map(([category, categorySources]) => (
+                <div key={category} style={{ marginBottom: '14px' }}>
+                    <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', opacity: 0.9 }}>{category}</h4>
+                    <div className="source-grid">
+                        {categorySources.map(src => (
+                            <div
+                                key={src}
+                                className={`source-item ${sources.includes(src) ? 'active' : ''}`}
+                                onClick={() => toggleSource(src)}
+                            >
+                                {src}
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
         </div>
     );
 };
