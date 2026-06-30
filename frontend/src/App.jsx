@@ -15,20 +15,10 @@ function App() {
     const fetchConfig = async (showLoader = false) => {
         if (showLoader) setIsLoading(true);
         try {
-            const REPO = import.meta.env.VITE_GITHUB_REPO;
-            const BRANCH = import.meta.env.VITE_GITHUB_BRANCH || 'main';
-            const TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-            const URL = `https://api.github.com/repos/${REPO}/contents/config.json?ref=${BRANCH}&t=${Date.now()}`;
-
-            const res = await fetch(URL, {
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                    'Cache-Control': 'no-cache',
-                    Pragma: 'no-cache'
-                }
-            });
-            const data = await res.json();
-            const currentConfig = JSON.parse(atob(data.content));
+            const res = await fetch(`/.netlify/functions/api-proxy/get-config?t=${Date.now()}`);
+            if (!res.ok) throw new Error(`Failed to fetch config: ${res.status}`);
+            const currentConfig = await res.json();
+            if (!currentConfig?.users) throw new Error('Invalid config payload');
             setConfig(currentConfig);
 
             // Initialize local psxPrices state from config
@@ -86,6 +76,10 @@ function App() {
 
     if (isLoading) {
         return <div className="loading-screen">Loading configuration...</div>;
+    }
+
+    if (!config?.users) {
+        return <div className="loading-screen">Configuration unavailable. Please refresh.</div>;
     }
 
     return (

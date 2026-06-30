@@ -66,5 +66,37 @@ exports.handler = async (event) => {
         }
     }
 
+    // 3. Read latest config.json from GitHub
+    if (event.path.includes('get-config') && event.httpMethod === 'GET') {
+        const REPO = process.env.VITE_GITHUB_REPO;
+        const TOKEN = process.env.GITHUB_TOKEN || process.env.VITE_GITHUB_TOKEN;
+        const BRANCH = process.env.VITE_GITHUB_BRANCH || 'main';
+        const URL = `https://api.github.com/repos/${REPO}/contents/config.json?ref=${BRANCH}`;
+
+        try {
+            const res = await fetch(URL, {
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                    Accept: 'application/vnd.github+json'
+                }
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                return { statusCode: res.status, body: JSON.stringify(errData) };
+            }
+
+            const data = await res.json();
+            const currentConfig = JSON.parse(Buffer.from(data.content, 'base64').toString());
+            return {
+                statusCode: 200,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentConfig)
+            };
+        } catch (err) {
+            return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+        }
+    }
+
     return { statusCode: 404, body: "Not Found" };
 };
