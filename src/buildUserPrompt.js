@@ -1,6 +1,7 @@
 function buildUserPrompt(user, articles, psxData, usStockData) {
     const articleList = articles.map((a, i) =>
         `[Article ${i + 1}]
+Category: ${a.assignedCategory || 'Global News'}
 Title: ${a.title}
 Source: ${a.source}
 Context: ${a.description.substring(0, 300)}
@@ -29,7 +30,9 @@ STRICT WRITING STYLE:
   - Heading: "<b>Why this matters:</b>" (MUST be bold HTML).
   - Content: MAX 1 line total. NOT BOLD.
 - NO news items about Sports, Showbiz, Fashion, or Celebs.
-- If a category is empty of relevant news, write: "<ul><li>No news found today in this category.</li></ul>"
+- EVERY category must contain at least 1 item.
+- Use the article "Category" hint first when placing items.
+- If an item fits multiple categories, place it in the most relevant one only.
 
 SOURCES: ${user.sources.join(', ')}
 
@@ -39,7 +42,8 @@ ${articleList}
 FORMATTING:
 - <h3> for categories.
 - <ul> and <li> for news items.
-- Include link: <a href="URL">Read more</a> at the end of the "Why this matters" line.`;
+- Include link: <a href="URL">Read more</a> at the end of the "Why this matters" line.
+- Do NOT output "No news found" for any category.`;
 }
 
 module.exports = { buildUserPrompt };
