@@ -6,9 +6,19 @@ const BASE_URL = 'https://newsdata.io/api/1/news';
 const DEFAULT_SIZE = 10;
 
 const EXCLUDE_KEYWORDS = [
-    'sports', 'cricket', 'football', 'fashion', 'showbiz',
-    'entertainment', 'celebrity', 'bollywood', 'film', 'music',
-    'recipe', 'lifestyle', 'drama', 'wedding', 'gossip'
+    // Sports
+    'cricket', 'football', 'soccer', 'basketball', 'tennis', 'golf', 'rugby',
+    'world cup', 'fifa', 'uefa', 'premier league', 'nba', 'nfl', 'nhl', 'mlb',
+    'formula 1', 'f1 race', 'olympics', 'athlete', 'goalkeeper', 'striker',
+    'midfielder', 'squad', 'match result', 'knockout stage', 'tournament',
+    'batting', 'bowling', 'wicket', 'innings', 'odi', 't20',
+    // Entertainment / Lifestyle
+    'showbiz', 'celebrity', 'bollywood', 'hollywood', 'actor', 'actress',
+    'film', 'movie', 'box office', 'album', 'music', 'concert', 'fashion',
+    'recipe', 'lifestyle', 'drama', 'wedding', 'gossip', 'entertainment',
+    'reality show', 'award show', 'oscar', 'grammy', 'emmy',
+    // General exclusions
+    'horoscope', 'astrology', 'zodiac'
 ];
 
 const CATEGORIES = [
@@ -19,12 +29,46 @@ const CATEGORIES = [
     'Business'
 ];
 
+// Minimum keyword score required for a category match (stricter for AI)
+const CATEGORY_MIN_SCORE = {
+    'Global News': 1,
+    'Pakistan News': 1,
+    Technology: 1,
+    AI: 2,   // AI needs 2 hits to avoid weak matches
+    Business: 1
+};
+
 const CATEGORY_KEYWORDS = {
-    'Global News': ['global', 'world', 'international', 'geopolitics', 'diplomatic', 'policy'],
-    'Pakistan News': ['pakistan', 'islamabad', 'karachi', 'lahore', 'psx', 'sbp', 'pak rupee'],
-    Technology: ['technology', 'tech', 'software', 'hardware', 'cloud', 'cyber', 'chip', 'semiconductor', 'digital', 'app', 'api'],
-    AI: ['ai', 'artificial intelligence', 'llm', 'model', 'chatbot', 'machine learning', 'generative', 'openai', 'gemini'],
-    Business: ['business', 'market', 'economy', 'finance', 'investment', 'funding', 'stock', 'earnings', 'merger', 'acquisition']
+    'Global News': [
+        'global', 'world', 'international', 'geopolitics', 'diplomatic', 'policy',
+        'united nations', 'un summit', 'nato', 'sanctions', 'trade war', 'tariff',
+        'bilateral', 'foreign minister', 'state department'
+    ],
+    'Pakistan News': [
+        'pakistan', 'islamabad', 'karachi', 'lahore', 'peshawar', 'quetta',
+        'psx', 'sbp', 'state bank', 'imf', 'rupee', 'pta', 'ptcl', 'kesc',
+        'secp', 'ecc', 'federal budget', 'nepra', 'ogra', 'passco', 'sindh',
+        'punjab', 'khyber', 'balochistan'
+    ],
+    Technology: [
+        'technology', 'tech', 'software', 'hardware', 'cloud computing', 'cybersecurity',
+        'chip', 'semiconductor', 'digital', 'startup', 'app', 'platform', 'saas',
+        'api', 'developer', 'open source', 'quantum', 'robotics', 'drone', 'satellite',
+        'data center', '5g', '6g', 'fiber', 'broadband', 'encryption'
+    ],
+    AI: [
+        'artificial intelligence', 'machine learning', 'deep learning', 'llm',
+        'large language model', 'generative ai', 'chatbot', 'openai', 'gemini',
+        'claude', 'gpt', 'neural network', 'computer vision', 'nlp', 'natural language',
+        'ai model', 'ai agent', 'ai chip', 'nvidia ai', 'foundation model',
+        'ai regulation', 'ai safety', 'anthropic', 'mistral', 'diffusion model'
+    ],
+    Business: [
+        'business', 'market', 'economy', 'finance', 'investment', 'funding', 'revenue',
+        'profit', 'loss', 'earnings', 'merger', 'acquisition', 'ipo', 'valuation',
+        'venture capital', 'private equity', 'interest rate', 'inflation', 'gdp',
+        'trade deficit', 'exports', 'imports', 'supply chain', 'commodities'
+    ]
 };
 
 const CATEGORY_QUERY_HINTS = {
@@ -68,9 +112,14 @@ function normalizeArticle(item) {
 
 function isRelevant(article) {
     const text = `${article.title} ${article.description}`.toLowerCase();
+    // Hard exclusion check
     const excluded = EXCLUDE_KEYWORDS.some(kw => text.includes(kw.toLowerCase()));
     if (excluded) return false;
-    return bestCategoryMatch(article).score > 0;
+    // Must score at least 1 in any category
+    const { category, score } = bestCategoryMatch(article);
+    if (!category || score < 1) return false;
+    // Category-specific minimum score
+    return score >= (CATEGORY_MIN_SCORE[category] || 1);
 }
 
 function dedupeArticles(articles) {
@@ -83,9 +132,10 @@ function dedupeArticles(articles) {
 }
 
 function takeTopForCategory(articles, category, limit) {
+    const minScore = CATEGORY_MIN_SCORE[category] || 1;
     return articles
         .map(a => ({ article: a, score: scoreArticleForCategory(a, category) }))
-        .filter(item => item.score > 0)
+        .filter(item => item.score >= minScore)
         .sort((a, b) => b.score - a.score)
         .slice(0, limit)
         .map(item => ({ ...item.article, assignedCategory: category }));
@@ -99,6 +149,9 @@ function buildBalancedFeed(categoryPools) {
     );
 
     for (const category of CATEGORIES) {
+        const minScore = CATEGORY_MIN_SCORE[category] || 1;
+
+        // Primary: use own category pool first
         const first = (categoryPools[category] || []).find(a => a.url && !usedUrls.has(a.url));
         if (first) {
             usedUrls.add(first.url);
@@ -106,17 +159,26 @@ function buildBalancedFeed(categoryPools) {
             continue;
         }
 
-        // Hard fallback: keep category filled from the same user sources.
+        // Fallback: only use articles that actually score for this category
+        // Pakistan News NEVER gets a non-Pakistan article as fallback
+        if (category === 'Pakistan News') {
+            // Skip fallback entirely for Pakistan — Gemini will say "limited coverage"
+            continue;
+        }
+
         const fallback = [...allCandidates]
             .filter(a => a.url && !usedUrls.has(a.url))
-            .sort((a, b) => scoreArticleForCategory(b, category) - scoreArticleForCategory(a, category))[0];
+            .map(a => ({ article: a, score: scoreArticleForCategory(a, category) }))
+            .filter(item => item.score >= minScore)
+            .sort((a, b) => b.score - a.score)[0];
 
         if (fallback) {
-            usedUrls.add(fallback.url);
-            selected.push({ ...fallback, assignedCategory: category });
+            usedUrls.add(fallback.article.url);
+            selected.push({ ...fallback.article, assignedCategory: category });
         }
     }
 
+    // Fill in remaining articles from each category pool
     for (const category of CATEGORIES) {
         for (const article of categoryPools[category] || []) {
             if (!article.url || usedUrls.has(article.url)) continue;

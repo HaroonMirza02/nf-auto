@@ -7,7 +7,7 @@ Source: ${a.source}
 Context: ${a.description.substring(0, 300)}`
   ).join('\n\n');
 
-  return `You are a crisp, senior analyst writing a technical briefing for ${user.name}.
+  return `You are a crisp, senior analyst writing a daily technical briefing for ${user.name}.
 
 STRICT RULES:
 - NO greetings (Good Morning, Hello, etc.).
@@ -21,29 +21,34 @@ CATEGORIES (Fixed):
 4. AI
 5. Business
 
+VERY IMPORTANT — CATEGORY DEFINITIONS (DO NOT DEVIATE):
+- Global News: Major geopolitical events, international policy, trade, sanctions, diplomatic relations. NOT sports, NOT entertainment.
+- Pakistan News: Pakistan-specific economy, politics, infrastructure, energy, corporate, regulatory news.
+- Technology: Software, hardware, chips, semiconductors, cloud, cybersecurity, startups, dev tools. NOT AI-specific news.
+- AI: ONLY news directly about artificial intelligence — models (GPT, Gemini, Claude, LLM), AI regulation, AI company funding, AI products/deployments. If no direct AI article exists, write "AI coverage is limited from selected sources today." Do NOT place finance or cyber news here just to fill the slot.
+- Business: Market data, corporate earnings, investment, M&A, IPOs, inflation, commodities.
+
+STRICT CONTENT RULES:
+- NEVER include sports, cricket, football, soccer, World Cup, Olympics, entertainment, showbiz, celebrity, film, music news.
+- ONLY include news from articles provided. DO NOT fabricate or infer from outside knowledge.
+- Each article is tagged with a "Category" hint — use it as the primary placement signal.
+- If there is no relevant article for a category, write: "<ul><li>Limited coverage from selected sources today.</li></ul>"
+- Aim for 2-3 items per category where articles are available.
+
 STRICT WRITING STYLE:
-- News Item Limit: MAX 1-2 lines total for the summary.
-- Bolding: BOLD exactly 2-3 most important words in the summary using <b>HTML tags</b>.
-- Impact Section: 
-  - MUST be on a NEW LINE (<br>).
-  - Heading: "<b>Why this matters:</b>" (MUST be bold HTML).
-  - Content: MAX 1 line total. NOT BOLD.
-- NO news items about Sports, Showbiz, Fashion, or Celebs.
-- EVERY category must contain at least 1 item.
-- Use the article "Category" hint first when placing items.
-- If an item fits multiple categories, place it in the most relevant one only.
+- News Item: MAX 1-2 lines summary. BOLD 2-3 key words using <b>HTML</b>.
+- Impact line: New line starting with "<b>Why this matters:</b>" — MAX 1 line, NOT bold.
+- At the end of each "Why this matters" line, write: [READ_MORE:N] where N is the Article number.
 
 SOURCES: ${user.sources.join(', ')}
 
-NEWS TO SUMMARIZE:
+ARTICLES TO SUMMARIZE:
 ${articleList}
 
 FORMATTING:
-- <h3> for categories.
+- <h3> for category titles.
 - <ul> and <li> for news items.
-- At the end of the "Why this matters" line, write: [READ_MORE:N] where N is the Article number (e.g. [READ_MORE:1]).
-- This placeholder will be replaced with the real article link automatically.
-- Do NOT output "No news found" for any category.`;
+- [READ_MORE:N] placeholder will be auto-replaced with the real article link.`;
 }
 
 module.exports = { buildUserPrompt };
