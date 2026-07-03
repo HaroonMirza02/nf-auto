@@ -1,14 +1,13 @@
 function buildUserPrompt(user, articles, psxData, usStockData) {
-    const articleList = articles.map((a, i) =>
-        `[Article ${i + 1}]
+  const articleList = articles.map((a, i) =>
+    `[Article ${i + 1}]
 Category: ${a.assignedCategory || 'Global News'}
 Title: ${a.title}
 Source: ${a.source}
-Context: ${a.description.substring(0, 300)}
-URL: ${a.url}`
-    ).join('\n\n');
+Context: ${a.description.substring(0, 300)}`
+  ).join('\n\n');
 
-    return `You are a crisp, senior analyst writing a technical briefing for ${user.name}.
+  return `You are a crisp, senior analyst writing a technical briefing for ${user.name}.
 
 STRICT RULES:
 - NO greetings (Good Morning, Hello, etc.).
@@ -42,7 +41,8 @@ ${articleList}
 FORMATTING:
 - <h3> for categories.
 - <ul> and <li> for news items.
-- Include link: <a href="URL">Read more</a> at the end of the "Why this matters" line.
+- At the end of the "Why this matters" line, write: [READ_MORE:N] where N is the Article number (e.g. [READ_MORE:1]).
+- This placeholder will be replaced with the real article link automatically.
 - Do NOT output "No news found" for any category.`;
 }
 

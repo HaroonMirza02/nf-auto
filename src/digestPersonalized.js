@@ -44,7 +44,17 @@ async function runPersonalizedDigest() {
             const usStockData = await fetchUSStocks(user.us_stocks);
             const psxData = calculatePSXStocks(user.psx_stocks);
             const prompt = buildUserPrompt(user, articles, psxData, usStockData);
-            const contentHtml = await summarizeForUser(user.name, prompt);
+            let contentHtml = await summarizeForUser(user.name, prompt);
+
+            // Replace [READ_MORE:N] placeholders with real article links
+            contentHtml = contentHtml.replace(/\[READ_MORE:(\d+)\]/gi, (match, numStr) => {
+                const idx = parseInt(numStr, 10) - 1;
+                const article = articles[idx];
+                if (article && article.url) {
+                    return `<a href="${article.url}" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a>`;
+                }
+                return ''; // Remove placeholder if article not found
+            });
 
             userSections.push({
                 id: user.id,
