@@ -9,8 +9,6 @@ const { buildUserPrompt } = require('./buildUserPrompt');
 const { summarizeForUser } = require('./summarizeForUser');
 const { buildEmail } = require('./buildEmail');
 const { sendDigest } = require('./mailer');
-const { injectReadMoreLinks } = require('./injectReadMoreLinks');
-const { buildFallbackContent } = require('./buildFallbackContent');
 
 async function runPersonalizedDigest() {
     console.log(`[${new Date().toISOString()}] Starting personalized NF AUTO digest run...`);
@@ -28,31 +26,35 @@ async function runPersonalizedDigest() {
     });
 
     const userSections = [];
+    const globalSeenUrls = new Set();
 
     for (const user of config.users) {
         console.log(`[${new Date().toISOString()}] Processing user: ${user.name}`);
 
         try {
-            const articles = await fetchUserNews(user.sources);
+            let articles = await fetchUserNews(user.sources);
+
+            // Deduplicate across all users
+            articles = articles.filter(a => {
+                if (globalSeenUrls.has(a.url)) return false;
+                globalSeenUrls.add(a.url);
+                return true;
+            });
 
             const usStockData = await fetchUSStocks(user.us_stocks);
             const psxData = calculatePSXStocks(user.psx_stocks);
+            const prompt = buildUserPrompt(user, articles, psxData, usStockData);
+            let contentHtml = await summarizeForUser(user.name, prompt);
 
-            let contentHtml;
-            if (!articles.length) {
-                console.warn(`[${new Date().toISOString()}] No articles for ${user.name} — using fallback content`);
-                contentHtml = buildFallbackContent();
-            } else {
-                const prompt = buildUserPrompt(user, articles, psxData, usStockData);
-                contentHtml = await summarizeForUser(user.name, prompt);
-
-                if (!contentHtml || /please provide the articles/i.test(contentHtml)) {
-                    console.warn(`[${new Date().toISOString()}] AI returned empty prompt for ${user.name} — retrying with fallback`);
-                    contentHtml = buildFallbackContent();
+            // Replace [READ_MORE:N] placeholders with real article links
+            contentHtml = contentHtml.replace(/\[READ_MORE:(\d+)\]/gi, (match, numStr) => {
+                const idx = parseInt(numStr, 10) - 1;
+                const article = articles[idx];
+                if (article && article.url) {
+                    return `<a href="${article.url}" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a>`;
                 }
-
-                contentHtml = injectReadMoreLinks(contentHtml, articles);
-            }
+                return ''; // Remove placeholder if article not found
+            });
 
             userSections.push({
                 id: user.id,

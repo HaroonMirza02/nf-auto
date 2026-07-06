@@ -3,9 +3,7 @@ const SOURCES = require('./sources');
 
 const NEWSDATA_API_KEY = process.env.NEWSDATA_API_KEY;
 const BASE_URL = 'https://newsdata.io/api/1/news';
-const DEFAULT_SIZE = 10; // NewsData.io max per request
-const ARTICLES_PER_CATEGORY = 3;
-const MAX_ARTICLES = 25;
+const DEFAULT_SIZE = 10;
 
 const EXCLUDE_KEYWORDS = [
     // Sports
@@ -152,43 +150,41 @@ function buildBalancedFeed(categoryPools) {
 
     for (const category of CATEGORIES) {
         const minScore = CATEGORY_MIN_SCORE[category] || 1;
-        const pool = categoryPools[category] || [];
 
-        const categoryMatches = pool
-            .filter(a => a.url && !usedUrls.has(a.url))
-            .map(a => ({ article: a, score: scoreArticleForCategory(a, category) }))
-            .filter(item => item.score >= minScore)
-            .sort((a, b) => b.score - a.score);
-
-        const picked = categoryMatches.slice(0, ARTICLES_PER_CATEGORY);
-        for (const item of picked) {
-            usedUrls.add(item.article.url);
-            selected.push({ ...item.article, assignedCategory: category });
+        // Primary: use own category pool first
+        const first = (categoryPools[category] || []).find(a => a.url && !usedUrls.has(a.url));
+        if (first) {
+            usedUrls.add(first.url);
+            selected.push(first);
+            continue;
         }
 
-        const stillNeeded = ARTICLES_PER_CATEGORY - picked.length;
-        if (stillNeeded <= 0 || category === 'Pakistan News') continue;
+        // Fallback: only use articles that actually score for this category
+        // Pakistan News NEVER gets a non-Pakistan article as fallback
+        if (category === 'Pakistan News') {
+            // Skip fallback entirely for Pakistan — Gemini will say "limited coverage"
+            continue;
+        }
 
-        const fallbackMatches = allCandidates
+        const fallback = [...allCandidates]
             .filter(a => a.url && !usedUrls.has(a.url))
             .map(a => ({ article: a, score: scoreArticleForCategory(a, category) }))
             .filter(item => item.score >= minScore)
-            .sort((a, b) => b.score - a.score);
+            .sort((a, b) => b.score - a.score)[0];
 
-        for (const item of fallbackMatches.slice(0, stillNeeded)) {
-            usedUrls.add(item.article.url);
-            selected.push({ ...item.article, assignedCategory: category });
+        if (fallback) {
+            usedUrls.add(fallback.article.url);
+            selected.push({ ...fallback.article, assignedCategory: category });
         }
     }
 
+    // Fill in remaining articles from each category pool
     for (const category of CATEGORIES) {
         for (const article of categoryPools[category] || []) {
             if (!article.url || usedUrls.has(article.url)) continue;
-            if (selected.length >= MAX_ARTICLES) break;
             usedUrls.add(article.url);
-            selected.push(article.assignedCategory ? article : { ...article, assignedCategory: category });
+            selected.push(article);
         }
-        if (selected.length >= MAX_ARTICLES) break;
     }
 
     return selected;
@@ -221,11 +217,6 @@ async function fetchUserNews(userSources) {
         .filter(Boolean)
         .join(',');
 
-    if (!domains) {
-        console.warn(`[${new Date().toISOString()}] No valid domains for sources: ${userSources.join(', ')}`);
-        return [];
-    }
-
     console.log(`[${new Date().toISOString()}] Fetching news from domains: ${domains}`);
 
     try {
@@ -237,27 +228,14 @@ async function fetchUserNews(userSources) {
         const categoryPools = {};
         CATEGORIES.forEach((category, idx) => {
             const merged = dedupeArticles([
-                ...takeTopForCategory(baseArticles, category, 6),
-                ...takeTopForCategory(categoryFetches[idx], category, 10)
+                ...takeTopForCategory(baseArticles, category, 5),
+                ...takeTopForCategory(categoryFetches[idx], category, 8)
             ]).filter(isRelevant);
             categoryPools[category] = merged;
         });
 
-        let final = buildBalancedFeed(categoryPools).slice(0, MAX_ARTICLES);
-
-        if (final.length < 5) {
-            console.warn(`[${new Date().toISOString()}] Only ${final.length} articles after filtering — retrying with relaxed filter`);
-            const relaxed = dedupeArticles(baseArticles)
-                .filter(a => a.url && !EXCLUDE_KEYWORDS.some(kw => `${a.title} ${a.description}`.toLowerCase().includes(kw)))
-                .slice(0, MAX_ARTICLES)
-                .map(a => {
-                    const { category } = bestCategoryMatch(a);
-                    return { ...a, assignedCategory: category || 'Global News' };
-                });
-            if (relaxed.length > final.length) final = relaxed;
-        }
-
-        const coverage = CATEGORIES.filter(category => (categoryPools[category] || []).length > 0).length;
+        const final = buildBalancedFeed(categoryPools).slice(0, 15);
+        const coverage = CATEGORIES.filter(category => categoryPools[category].length > 0).length;
         console.log(`[${new Date().toISOString()}] ${final.length} relevant articles selected with ${coverage}/${CATEGORIES.length} category pools populated`);
         return final;
 
