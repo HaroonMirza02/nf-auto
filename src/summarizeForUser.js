@@ -39,6 +39,11 @@ async function summarizeForUser(userName, prompt) {
         html = html.replace(/```[a-z]*\n?/gi, '').replace(/```/g, '').trim();
         html = html.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
+        if (/please provide the articles/i.test(html)) {
+            console.warn(`[${new Date().toISOString()}] ${MODEL} returned empty-input prompt for ${userName}`);
+            return '';
+        }
+
         console.log(`[${new Date().toISOString()}] Summary successful for ${userName}`);
         return html;
 

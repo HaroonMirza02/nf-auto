@@ -4,6 +4,7 @@ function buildUserPrompt(user, articles, psxData, usStockData) {
 Category: ${a.assignedCategory || 'Global News'}
 Title: ${a.title}
 Source: ${a.source}
+URL: ${a.url}
 Context: ${a.description.substring(0, 300)}`
   ).join('\n\n');
 
@@ -38,7 +39,8 @@ STRICT CONTENT RULES:
 STRICT WRITING STYLE:
 - News Item: MAX 1-2 lines summary. BOLD 2-3 key words using <b>HTML</b>.
 - Impact line: New line starting with "<b>Why this matters:</b>" — MAX 1 line, NOT bold.
-- At the end of each "Why this matters" line, write: [READ_MORE:N] where N is the Article number.
+- MANDATORY: At the end of EVERY news item (after the "Why this matters" line), append [READ_MORE:N] where N is the exact Article number you summarized. Every item MUST have one — no exceptions.
+- Do NOT ask the user for articles. Articles are already provided below — summarize them now.
 
 SOURCES: ${user.sources.join(', ')}
 
@@ -47,8 +49,9 @@ ${articleList}
 
 FORMATTING:
 - <h3> for category titles.
-- <ul> and <li> for news items.
-- [READ_MORE:N] placeholder will be auto-replaced with the real article link.`;
+- <ul> and <li> for news items — one <li> per news story.
+- [READ_MORE:N] placeholder will be auto-replaced with the real article link from Article N's URL.
+- Output ONLY the HTML digest. No preamble, no questions, no meta-commentary.`;
 }
 
 module.exports = { buildUserPrompt };
