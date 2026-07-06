@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-06T08:11:27.434Z",
+  "lastUpdated": "2026-07-06T08:12:16.242Z",
   "users": [
     {
       "id": "haroon",
@@ -51,7 +51,8 @@
       "email": "zaidbinasim2197@gmail.com",
       "sources": [
         "dawn",
-        "bloomberg"
+        "bloomberg",
+        "theverge"
       ],
       "psx_stocks": [
         {
