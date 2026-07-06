@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-06T08:12:16.242Z",
+  "lastUpdated": "2026-07-06T08:12:34.171Z",
   "users": [
     {
       "id": "haroon",
@@ -95,7 +95,8 @@
       "email": "mhassan.dev20@gmail.com",
       "sources": [
         "cnbc",
-        "ft"
+        "ft",
+        "brecorder"
       ],
       "psx_stocks": [
         {
