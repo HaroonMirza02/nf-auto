@@ -9,6 +9,7 @@ const { buildUserPrompt } = require('./buildUserPrompt');
 const { summarizeForUser } = require('./summarizeForUser');
 const { buildEmail } = require('./buildEmail');
 const { sendDigest } = require('./mailer');
+const { formatReadMoreLink, injectReadMoreLinks } = require('./injectReadMoreLinks');
 
 async function runPersonalizedDigest() {
     console.log(`[${new Date().toISOString()}] Starting personalized NF AUTO digest run...`);
@@ -49,12 +50,11 @@ async function runPersonalizedDigest() {
             // Replace [READ_MORE:N] placeholders with real article links
             contentHtml = contentHtml.replace(/\[READ_MORE:(\d+)\]/gi, (match, numStr) => {
                 const idx = parseInt(numStr, 10) - 1;
-                const article = articles[idx];
-                if (article && article.url) {
-                    return `<a href="${article.url}" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a>`;
-                }
-                return ''; // Remove placeholder if article not found
+                return formatReadMoreLink(articles[idx]) || '';
             });
+
+            // Fill any items the model skipped — same link format, real article URLs
+            contentHtml = injectReadMoreLinks(contentHtml, articles);
 
             userSections.push({
                 id: user.id,
