@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-06T08:12:34.171Z",
+  "lastUpdated": "2026-07-06T08:12:54.425Z",
   "users": [
     {
       "id": "haroon",
@@ -139,7 +139,8 @@
       "email": "iamalik2005@gmail.com",
       "sources": [
         "brecorder",
-        "reuters"
+        "reuters",
+        "wired"
       ],
       "psx_stocks": [
         {
