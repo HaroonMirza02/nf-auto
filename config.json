@@ -1,177 +1,178 @@
 {
-    "lastUpdated": "2026-06-23T12:25:00.000Z",
-    "users": [
+  "lastUpdated": "2026-07-06T08:11:27.434Z",
+  "users": [
+    {
+      "id": "haroon",
+      "name": "Haroon Mirza",
+      "email": "haroon.mirza040602@gmail.com",
+      "sources": [
+        "reuters",
+        "techcrunch",
+        "tribune"
+      ],
+      "psx_stocks": [
         {
-            "id": "haroon",
-            "name": "Haroon Mirza",
-            "email": "haroon.mirza040602@gmail.com",
-            "sources": [
-                "reuters",
-                "techcrunch"
-            ],
-            "psx_stocks": [
-                {
-                    "ticker": "SYS",
-                    "current_price": 151.18,
-                    "prev_price": 155.16
-                },
-                {
-                    "ticker": "NETSOL",
-                    "current_price": 133.10,
-                    "prev_price": 136.50
-                },
-                {
-                    "ticker": "ICI",
-                    "current_price": 591.53,
-                    "prev_price": 594.90
-                },
-                {
-                    "ticker": "LUCK",
-                    "current_price": 462.98,
-                    "prev_price": 471.00
-                },
-                {
-                    "ticker": "OGDC",
-                    "current_price": 331.28,
-                    "prev_price": 339.00
-                }
-            ],
-            "us_stocks": [
-                "AMZN",
-                "GOOG",
-                "NVDA",
-                "META",
-                "MSFT"
-            ]
+          "ticker": "SYS",
+          "current_price": 151.18,
+          "prev_price": 155.16
         },
         {
-            "id": "zaid",
-            "name": "Zaid Bin Asim",
-            "email": "zaidbinasim2197@gmail.com",
-            "sources": [
-                "dawn",
-                "bloomberg"
-            ],
-            "psx_stocks": [
-                {
-                    "ticker": "SYS",
-                    "current_price": 151.18,
-                    "prev_price": 155.16
-                },
-                {
-                    "ticker": "SHSML",
-                    "current_price": 394.24,
-                    "prev_price": 376.10
-                },
-                {
-                    "ticker": "NETSOL",
-                    "current_price": 133.10,
-                    "prev_price": 136.50
-                },
-                {
-                    "ticker": "OGDC",
-                    "current_price": 331.28,
-                    "prev_price": 339.00
-                },
-                {
-                    "ticker": "PSO",
-                    "current_price": 357.14,
-                    "prev_price": 360.00
-                }
-            ],
-            "us_stocks": [
-                "AAPL",
-                "MSFT",
-                "CRM",
-                "TSLA",
-                "GOOGL"
-            ]
+          "ticker": "NETSOL",
+          "current_price": 133.1,
+          "prev_price": 136.5
         },
         {
-            "id": "hassan",
-            "name": "M. Hassan",
-            "email": "mhassan.dev20@gmail.com",
-            "sources": [
-                "cnbc",
-                "ft"
-            ],
-            "psx_stocks": [
-                {
-                    "ticker": "SYS",
-                    "current_price": 151.18,
-                    "prev_price": 155.16
-                },
-                {
-                    "ticker": "PTC",
-                    "current_price": 65.58,
-                    "prev_price": 66.88
-                },
-                {
-                    "ticker": "OCTOPUS",
-                    "current_price": 38.26,
-                    "prev_price": 34.89
-                },
-                {
-                    "ticker": "TRG",
-                    "current_price": 66.68,
-                    "prev_price": 70.20
-                },
-                {
-                    "ticker": "AVN",
-                    "current_price": 38.39,
-                    "prev_price": 35.00
-                }
-            ],
-            "us_stocks": [
-                "MSFT",
-                "TEAM",
-                "AMZN",
-                "CRM",
-                "GOOGL"
-            ]
+          "ticker": "ICI",
+          "current_price": 591.53,
+          "prev_price": 594.9
         },
         {
-            "id": "ibrahim",
-            "name": "Ibrahim Malik",
-            "email": "iamalik2005@gmail.com",
-            "sources": [
-                "brecorder",
-                "reuters"
-            ],
-            "psx_stocks": [
-                {
-                    "ticker": "SYS",
-                    "current_price": 151.18,
-                    "prev_price": 155.16
-                },
-                {
-                    "ticker": "PTC",
-                    "current_price": 65.58,
-                    "prev_price": 66.88
-                },
-                {
-                    "ticker": "OCTOPUS",
-                    "current_price": 38.26,
-                    "prev_price": 34.89
-                },
-                {
-                    "ticker": "TRG",
-                    "current_price": 66.68,
-                    "prev_price": 70.20
-                },
-                {
-                    "ticker": "AVN",
-                    "current_price": 38.39,
-                    "prev_price": 35.00
-                }
-            ],
-            "us_stocks": [
-                "AAPL",
-                "MSFT",
-                "NVDA",
-                "GOOGL",
-                "META"
-            ]
+          "ticker": "LUCK",
+          "current_price": 462.98,
+          "prev_price": 471
+        },
+        {
+          "ticker": "OGDC",
+          "current_price": 331.28,
+          "prev_price": 339
         }
-    ]
+      ],
+      "us_stocks": [
+        "AMZN",
+        "GOOG",
+        "NVDA",
+        "META",
+        "MSFT"
+      ]
+    },
+    {
+      "id": "zaid",
+      "name": "Zaid Bin Asim",
+      "email": "zaidbinasim2197@gmail.com",
+      "sources": [
+        "dawn",
+        "bloomberg"
+      ],
+      "psx_stocks": [
+        {
+          "ticker": "SYS",
+          "current_price": 151.18,
+          "prev_price": 155.16
+        },
+        {
+          "ticker": "SHSML",
+          "current_price": 394.24,
+          "prev_price": 376.1
+        },
+        {
+          "ticker": "NETSOL",
+          "current_price": 133.1,
+          "prev_price": 136.5
+        },
+        {
+          "ticker": "OGDC",
+          "current_price": 331.28,
+          "prev_price": 339
+        },
+        {
+          "ticker": "PSO",
+          "current_price": 357.14,
+          "prev_price": 360
+        }
+      ],
+      "us_stocks": [
+        "AAPL",
+        "MSFT",
+        "CRM",
+        "TSLA",
+        "GOOGL"
+      ]
+    },
+    {
+      "id": "hassan",
+      "name": "M. Hassan",
+      "email": "mhassan.dev20@gmail.com",
+      "sources": [
+        "cnbc",
+        "ft"
+      ],
+      "psx_stocks": [
+        {
+          "ticker": "SYS",
+          "current_price": 151.18,
+          "prev_price": 155.16
+        },
+        {
+          "ticker": "PTC",
+          "current_price": 65.58,
+          "prev_price": 66.88
+        },
+        {
+          "ticker": "OCTOPUS",
+          "current_price": 38.26,
+          "prev_price": 34.89
+        },
+        {
+          "ticker": "TRG",
+          "current_price": 66.68,
+          "prev_price": 70.2
+        },
+        {
+          "ticker": "AVN",
+          "current_price": 38.39,
+          "prev_price": 35
+        }
+      ],
+      "us_stocks": [
+        "MSFT",
+        "TEAM",
+        "AMZN",
+        "CRM",
+        "GOOGL"
+      ]
+    },
+    {
+      "id": "ibrahim",
+      "name": "Ibrahim Malik",
+      "email": "iamalik2005@gmail.com",
+      "sources": [
+        "brecorder",
+        "reuters"
+      ],
+      "psx_stocks": [
+        {
+          "ticker": "SYS",
+          "current_price": 151.18,
+          "prev_price": 155.16
+        },
+        {
+          "ticker": "PTC",
+          "current_price": 65.58,
+          "prev_price": 66.88
+        },
+        {
+          "ticker": "OCTOPUS",
+          "current_price": 38.26,
+          "prev_price": 34.89
+        },
+        {
+          "ticker": "TRG",
+          "current_price": 66.68,
+          "prev_price": 70.2
+        },
+        {
+          "ticker": "AVN",
+          "current_price": 38.39,
+          "prev_price": 35
+        }
+      ],
+      "us_stocks": [
+        "AAPL",
+        "MSFT",
+        "NVDA",
+        "GOOGL",
+        "META"
+      ]
+    }
+  ]
 }
