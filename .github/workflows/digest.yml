@@ -2,8 +2,9 @@ name: "NF AUTO Daily Digest"
 
 on:
   schedule:
-    # GitHub Actions cron is UTC. 03:00 UTC = 08:00 Pakistan (PKT, UTC+5)
-    - cron: "0 3 * * *"
+    # GitHub Actions cron is UTC. 02:30 UTC = 07:30 Pakistan (PKT, UTC+5)
+    # Starts 30 min early to account for GitHub queue delay + digest processing time
+    - cron: "30 2 * * *"
   workflow_dispatch:
 
 jobs:
