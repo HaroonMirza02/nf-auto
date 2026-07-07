@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-06T08:12:54.425Z",
+  "lastUpdated": "2026-07-07T05:43:29.226Z",
   "users": [
     {
       "id": "haroon",
@@ -13,13 +13,13 @@
       "psx_stocks": [
         {
           "ticker": "SYS",
-          "current_price": 151.18,
-          "prev_price": 155.16
+          "current_price": 148.25,
+          "prev_price": 149.5
         },
         {
           "ticker": "NETSOL",
-          "current_price": 133.1,
-          "prev_price": 136.5
+          "current_price": 133.4,
+          "prev_price": 134.2
         },
         {
           "ticker": "ICI",
@@ -28,13 +28,13 @@
         },
         {
           "ticker": "LUCK",
-          "current_price": 462.98,
-          "prev_price": 471
+          "current_price": 485.48,
+          "prev_price": 489
         },
         {
           "ticker": "OGDC",
-          "current_price": 331.28,
-          "prev_price": 339
+          "current_price": 344.8,
+          "prev_price": 348.72
         }
       ],
       "us_stocks": [
