@@ -2,7 +2,8 @@ name: "NF AUTO Daily Digest"
 
 on:
   schedule:
-    - cron: "0 4 * * *"
+    # GitHub Actions cron is UTC. 03:00 UTC = 08:00 Pakistan (PKT, UTC+5)
+    - cron: "0 3 * * *"
   workflow_dispatch:
 
 jobs:

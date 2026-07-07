@@ -1,9 +1,7 @@
 name: Daily News Digest
 
 on:
-  schedule:
-    # 5:00 AM UTC is 10:00 AM PKT
-    - cron: '0 5 * * *'
+  # Manual only — scheduled sending is handled by `.github/workflows/digest.yml`
   workflow_dispatch: # Allow manual trigger
 
 # Grant write permissions for pushing updates
