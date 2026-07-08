@@ -24,7 +24,7 @@ jobs:
         run: npm install
 
       - name: Run Digest
-        run: node src/digestPersonalized.js
+        run: node test-run.js
         env:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
