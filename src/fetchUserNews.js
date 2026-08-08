@@ -4,6 +4,8 @@ const SOURCES = require('./sources');
 const NEWSDATA_API_KEY = process.env.NEWSDATA_API_KEY;
 const BASE_URL = 'https://newsdata.io/api/1/news';
 const DEFAULT_SIZE = 10;
+const MIN_PER_CATEGORY = 3;
+const MAX_PER_CATEGORY = 3;
 
 const EXCLUDE_KEYWORDS = [
     // Sports
@@ -17,6 +19,10 @@ const EXCLUDE_KEYWORDS = [
     'film', 'movie', 'box office', 'album', 'music', 'concert', 'fashion',
     'recipe', 'lifestyle', 'drama', 'wedding', 'gossip', 'entertainment',
     'reality show', 'award show', 'oscar', 'grammy', 'emmy',
+    // Conflict / general politics noise — filtered here as a backstop even
+    // though the query-level NOT clauses below already try to exclude these
+    'war', 'military', 'conflict', 'attack', 'airstrike', 'missile', 'ceasefire',
+    'invasion', 'militant', 'terrorist', 'insurgent',
     // General exclusions
     'horoscope', 'astrology', 'zodiac'
 ];
@@ -71,18 +77,78 @@ const CATEGORY_KEYWORDS = {
     ]
 };
 
-const CATEGORY_QUERY_HINTS = {
-    'Global News': 'global OR world OR international OR geopolitics OR policy',
-    'Pakistan News': 'Pakistan OR Islamabad OR Karachi OR Lahore OR PSX OR SBP',
-    Technology: 'technology OR tech OR software OR cloud OR cybersecurity OR semiconductor',
-    AI: 'AI OR "artificial intelligence" OR LLM OR "machine learning" OR generative',
-    Business: 'business OR markets OR economy OR finance OR investment OR earnings'
+// Words that anchor an article to the tech industry. Global News, Pakistan
+// News, and Business must contain at least one of these to qualify — this is
+// what keeps a war/politics/general-economy story out of a tech digest even
+// though it might otherwise match the category's theme keywords above.
+const TECH_ANCHOR_KEYWORDS = [
+    'technology', 'tech', 'ai', 'artificial intelligence', 'software', 'hardware',
+    'digital', 'startup', 'app', 'platform', 'internet', 'cyber', 'cybersecurity',
+    'data', 'cloud', 'chip', 'semiconductor', 'automation', 'robot', 'robotics',
+    'innovation', 'telecom', 'fintech', 'e-commerce', 'broadband', '5g', '6g',
+    'blockchain', 'crypto', 'quantum', 'satellite', 'saas', 'developer'
+];
+
+// Technology and AI are inherently tech — they're exempt from the extra check.
+const REQUIRES_TECH_ANCHOR = {
+    'Global News': true,
+    'Pakistan News': true,
+    Technology: false,
+    AI: false,
+    Business: true
 };
 
+// Query hints bake the tech requirement into the NewsData request itself.
+// IMPORTANT: NewsData's real limit on `q` is 100 characters, despite their
+// docs mentioning 512 — verified against the live API (UnsupportedQueryLength
+// fires above 100). NOT() clauses are deliberately left out here: they're not
+// needed for exclusion (EXCLUDE_KEYWORDS + isRelevant already strip war/sports/
+// politics noise downstream) and they weren't cheap enough to keep within
+// budget alongside the OR-lists that actually widen the candidate pool.
+const QUERY_MAX_LENGTH = 100;
+
+const CATEGORY_QUERY_HINTS = {
+    'Global News': 'technology AND (global OR world OR policy OR regulation)',
+    'Pakistan News': 'technology AND (Pakistan OR Islamabad OR Karachi OR telecom OR fintech)',
+    Technology: 'technology OR software OR cybersecurity OR semiconductor',
+    AI: '"artificial intelligence" OR LLM OR "machine learning" OR generative',
+    Business: 'technology AND (earnings OR funding OR IPO OR investment)'
+};
+
+// Defensive check: catch a future edit that pushes a hint back over the real
+// limit immediately at startup instead of silently degrading in production
+// (this is exactly what happened before this fix — every category query was
+// failing and nobody knew until a dry run surfaced the API error).
+for (const [category, hint] of Object.entries(CATEGORY_QUERY_HINTS)) {
+    if (hint.length > QUERY_MAX_LENGTH) {
+        console.warn(`[${new Date().toISOString()}] WARNING: query hint for "${category}" is ${hint.length} chars, over NewsData's ${QUERY_MAX_LENGTH}-char limit — it WILL be rejected by the API.`);
+    }
+}
+
+// ─── Word-boundary regex helpers (V2) ────────────────────────────────────────
+// Replaces the old text.includes(kw) approach that caused false positives:
+//   "ai" → matched inside "Ukrainian", "rain", "paid"
+//   "app" → matched inside "happened", "application"
+//   "nato" → matched inside "senator", "donation"
+
+const _kwRegexCache = new Map();
+function kwRegex(keyword) {
+    if (_kwRegexCache.has(keyword)) return _kwRegexCache.get(keyword);
+    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`\\b${escaped}\\b`, 'i');
+    _kwRegexCache.set(keyword, re);
+    return re;
+}
+
 function scoreArticleForCategory(article, category) {
-    const text = `${article.title} ${article.description}`.toLowerCase();
+    const text = `${article.title} ${article.description}`;
     const keywords = CATEGORY_KEYWORDS[category] || [];
-    return keywords.reduce((score, kw) => score + (text.includes(kw) ? 1 : 0), 0);
+    return keywords.reduce((score, kw) => score + (kwRegex(kw).test(text) ? 1 : 0), 0);
+}
+
+function isTechAnchored(article) {
+    const text = `${article.title} ${article.description}`;
+    return TECH_ANCHOR_KEYWORDS.some(kw => kwRegex(kw).test(text));
 }
 
 function bestCategoryMatch(article) {
@@ -111,15 +177,18 @@ function normalizeArticle(item) {
 }
 
 function isRelevant(article) {
-    const text = `${article.title} ${article.description}`.toLowerCase();
-    // Hard exclusion check
-    const excluded = EXCLUDE_KEYWORDS.some(kw => text.includes(kw.toLowerCase()));
+    const text = `${article.title} ${article.description}`;
+    // Hard exclusion check — whole-word matching to avoid false positives
+    const excluded = EXCLUDE_KEYWORDS.some(kw => kwRegex(kw).test(text));
     if (excluded) return false;
     // Must score at least 1 in any category
     const { category, score } = bestCategoryMatch(article);
     if (!category || score < 1) return false;
     // Category-specific minimum score
-    return score >= (CATEGORY_MIN_SCORE[category] || 1);
+    if (score < (CATEGORY_MIN_SCORE[category] || 1)) return false;
+    // Non-tech-inherent categories must also carry a tech anchor
+    if (REQUIRES_TECH_ANCHOR[category] && !isTechAnchored(article)) return false;
+    return true;
 }
 
 function dedupeArticles(articles) {
@@ -136,6 +205,7 @@ function takeTopForCategory(articles, category, limit) {
     return articles
         .map(a => ({ article: a, score: scoreArticleForCategory(a, category) }))
         .filter(item => item.score >= minScore)
+        .filter(item => !REQUIRES_TECH_ANCHOR[category] || isTechAnchored(item.article))
         .sort((a, b) => b.score - a.score)
         .slice(0, limit)
         .map(item => ({ ...item.article, assignedCategory: category }));
@@ -160,16 +230,13 @@ function buildBalancedFeed(categoryPools) {
         }
 
         // Fallback: only use articles that actually score for this category
-        // Pakistan News NEVER gets a non-Pakistan article as fallback
-        if (category === 'Pakistan News') {
-            // Skip fallback entirely for Pakistan — Gemini will say "limited coverage"
-            continue;
-        }
-
+        // AND (for Global/Pakistan/Business) still carry a tech anchor —
+        // no category is skipped anymore, but the fallback stays tech-relevant.
         const fallback = [...allCandidates]
             .filter(a => a.url && !usedUrls.has(a.url))
             .map(a => ({ article: a, score: scoreArticleForCategory(a, category) }))
             .filter(item => item.score >= minScore)
+            .filter(item => !REQUIRES_TECH_ANCHOR[category] || isTechAnchored(item.article))
             .sort((a, b) => b.score - a.score)[0];
 
         if (fallback) {
@@ -178,7 +245,8 @@ function buildBalancedFeed(categoryPools) {
         }
     }
 
-    // Fill in remaining articles from each category pool
+    // Fill in remaining articles from each category pool (already capped to
+    // MAX_PER_CATEGORY upstream, so this just adds the 2nd/3rd items per category)
     for (const category of CATEGORIES) {
         for (const article of categoryPools[category] || []) {
             if (!article.url || usedUrls.has(article.url)) continue;
@@ -194,10 +262,10 @@ async function fetchFromNewsData(domains, query) {
     const params = new URLSearchParams({
         apikey: NEWSDATA_API_KEY,
         language: 'en',
-        domainurl: domains,
         size: String(DEFAULT_SIZE)
     });
 
+    if (domains) params.set('domainurl', domains);
     if (query) params.set('q', query);
 
     const response = await fetch(`${BASE_URL}?${params.toString()}`);
@@ -209,6 +277,17 @@ async function fetchFromNewsData(domains, query) {
     }
 
     return (data.results || []).map(normalizeArticle);
+}
+
+// Supplemental fetch: same tech-anchored query hint as the primary fetch, but
+// with NO domain restriction at all — NewsData caps domainurl at 5 domains
+// per request, and the curated SOURCES list has more than that, so trying to
+// pass "all curated domains" errors out. Leaving domains unset searches
+// NewsData's full index instead, which is a better fit anyway for "widen
+// beyond this user's own sources." Only called when a category's own pool
+// comes up short, so it doesn't burn quota on categories already well covered.
+async function fetchSupplemental(category) {
+    return fetchFromNewsData(null, CATEGORY_QUERY_HINTS[category]);
 }
 
 async function fetchUserNews(userSources) {
@@ -233,6 +312,20 @@ async function fetchUserNews(userSources) {
             ]).filter(isRelevant);
             categoryPools[category] = merged;
         });
+
+        // Top up any category that's still thin, by widening beyond this
+        // user's own sources — keeps every category tech-relevant AND filled.
+        for (const category of CATEGORIES) {
+            if (categoryPools[category].length < MIN_PER_CATEGORY) {
+                const supplemental = await fetchSupplemental(category);
+                const topped = takeTopForCategory(supplemental, category, MIN_PER_CATEGORY)
+                    .filter(isRelevant);
+                categoryPools[category] = dedupeArticles([...categoryPools[category], ...topped]);
+                console.log(`[${new Date().toISOString()}] Topped up ${category}: now ${categoryPools[category].length} candidates`);
+            }
+            // Hard cap — this is the real max-3, not left to the prompt to enforce
+            categoryPools[category] = categoryPools[category].slice(0, MAX_PER_CATEGORY);
+        }
 
         const final = buildBalancedFeed(categoryPools).slice(0, 15);
         const coverage = CATEGORIES.filter(category => categoryPools[category].length > 0).length;

@@ -32,6 +32,16 @@ async function fetchQuery(queryParams) {
     }
 }
 
+// ─── Word-boundary regex helpers (V2) ────────────────────────────────────────
+const _kwRegexCache = new Map();
+function kwRegex(keyword) {
+    if (_kwRegexCache.has(keyword)) return _kwRegexCache.get(keyword);
+    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp(`\\b${escaped}\\b`, 'i');
+    _kwRegexCache.set(keyword, re);
+    return re;
+}
+
 async function collectAllCategories() {
     const results = [];
 
@@ -83,10 +93,11 @@ async function collectAllCategories() {
         const bannedSources = ['openpr.com', 'einnews.com', 'marketwatch.com', 'bringatrailer.com', 'cyclingnews.com'];
 
         articles = articles.filter(a => {
-            const text = (a.title + ' ' + a.description).toLowerCase();
+            const text = (a.title + ' ' + a.description);
             const source = a.source.toLowerCase();
 
-            const hasNoise = editorialNoise.some(k => text.includes(k));
+            // Whole-word matching to prevent false positives (V2 fix)
+            const hasNoise = editorialNoise.some(k => kwRegex(k).test(text));
             const isBannedSource = bannedSources.some(s => source.includes(s) || a.url.toLowerCase().includes(s));
 
             return !hasNoise && !isBannedSource;
@@ -97,10 +108,11 @@ async function collectAllCategories() {
             const pkKeywords = ['pakistan', 'islamabad', 'karachi', 'lahore', 'peshawar', 'quetta', 'sindh', 'punjab', 'kpk', 'balochistan'];
             const techKeywords = ['tech', 'digital', 'software', 'innovation', 'startup', 'telecom', 'ai', 'internet', 'broadband', 'fintech', 'automation'];
 
+            // Whole-word matching for Pakistan + tech anchor (V2 fix)
             articles = articles.filter(a => {
-                const text = (a.title + ' ' + a.description).toLowerCase();
-                const hasLocation = pkKeywords.some(k => text.includes(k));
-                const hasTech = techKeywords.some(k => text.includes(k));
+                const text = (a.title + ' ' + a.description);
+                const hasLocation = pkKeywords.some(k => kwRegex(k).test(text));
+                const hasTech = techKeywords.some(k => kwRegex(k).test(text));
                 return hasLocation && hasTech;
             });
         }
