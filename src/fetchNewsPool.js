@@ -17,8 +17,9 @@
  *   - 2 broad domain chunk fetches (9 domains split into groups of 5)  = 2 credits
  *   - 5 category-query fetches (one per category hint)                 = 5 credits
  *   - 3 NewsData native category fetches (technology/business/science) = 3 credits
- *   - 3 Pakistan-specific supplemental fetches                         = 3 credits
- *   TOTAL: ~13 credits per run  (well within 200/day limit)
+ *   - 3 Pakistan supplemental keyword + country queries                = 3 credits
+ *   - 1 Pakistan dedicated tech outlet domain fetch                    = 1 credit
+ *   TOTAL: ~14 credits per run  (well within 200/day limit)
  *
  * The pool returned typically contains 80–120 unique articles before
  * any relevance filtering. After filtering it yields ~40–60 usable
@@ -59,15 +60,24 @@ const CATEGORY_QUERY_HINTS = {
 };
 
 /**
- * Additional Pakistan-focused queries that deliberately widen beyond tech so
- * the Pakistan pool isn't starved. The AI relevance filter downstream decides
- * what's actually included in the digest; here we want broad raw coverage.
+ * Additional Pakistan-focused queries. These deliberately widen beyond tech
+ * so the Pakistan pool isn't starved. The AI relevance filter downstream
+ * decides what's actually included in the digest; here we want broad raw
+ * coverage. The `country: 'pk'` parameter restricts to Pakistani sources.
+ *
+ * Also includes a domain-targeted fetch for Pakistan's dedicated tech outlets
+ * (ProPakistani, TechJuice, Profit by Pakistan Today) which consistently
+ * produce tech and business content that the global keyword queries miss.
  */
 const PAKISTAN_SUPPLEMENTAL_QUERIES = [
-    'Pakistan business economy startup digital',
-    'Pakistan fintech banking SBP SECP',
-    'Pakistan IT export software Lahore Karachi'
+    'Pakistan technology startup fintech digital',
+    'Pakistan software IT export SBP economy',
+    'Pakistan telecom broadband 5G internet'
 ];
+
+// Pakistan-specific tech news domains — fetched separately so they always
+// get at least one request slot regardless of the global domain chunking.
+const PAKISTAN_TECH_DOMAINS = 'propakistani.pk,techjuice.pk,profit.pakistantoday.com.pk';
 
 // Validate query lengths at module load — catch accidental over-length edits
 // before they silently fail in production.
@@ -241,7 +251,7 @@ async function fetchNewsPool(users) {
         await new Promise(r => setTimeout(r, 600));
     }
 
-    // 4. Pakistan supplemental fetches
+    // 4. Pakistan supplemental fetches — keyword queries with country filter
     for (let i = 0; i < PAKISTAN_SUPPLEMENTAL_QUERIES.length; i++) {
         const q       = PAKISTAN_SUPPLEMENTAL_QUERIES[i];
         const results = await fetchFromNewsData(
@@ -253,6 +263,15 @@ async function fetchNewsPool(users) {
             await new Promise(r => setTimeout(r, 600));
         }
     }
+
+    // 4b. Pakistan dedicated tech outlets — domain-targeted fetch with no q
+    //     restriction, so ALL their recent articles enter the pool.
+    const pkTechResults = await fetchFromNewsData(
+        { domainurl: PAKISTAN_TECH_DOMAINS },
+        `Pakistan tech outlets (${PAKISTAN_TECH_DOMAINS})`
+    );
+    allArticles.push(...pkTechResults);
+    await new Promise(r => setTimeout(r, 600));
 
     // 5. Global dedup — runs once on the full pool before anyone touches it
     const pool = dedupeByUrl(allArticles);

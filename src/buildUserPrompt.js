@@ -22,22 +22,25 @@ CATEGORIES (Fixed):
 5. Business
 
 VERY IMPORTANT — CATEGORY DEFINITIONS (DO NOT DEVIATE):
-- Global News: Major geopolitical events, international policy, trade, sanctions, diplomatic relations. NOT sports, NOT entertainment.
-- Pakistan News: Pakistan-specific economy, politics, infrastructure, energy, corporate, regulatory news.
-- Technology: Software, hardware, chips, semiconductors, cloud, cybersecurity, startups, dev tools. NOT AI-specific news.
-- AI: ONLY news directly about artificial intelligence — models (GPT, Gemini, Claude, LLM), AI regulation, AI company funding, AI products/deployments. If no direct AI article exists, write "AI coverage is limited from selected sources today." Do NOT place finance or cyber news here just to fill the slot.
-- Business: Market data, corporate earnings, investment, M&A, IPOs, inflation, commodities.
+- Global News: International tech policy, cross-border tech regulation, chip export controls, global tech trade, tech-sector diplomacy. NOT general geopolitics, wars, elections, or diplomacy unless it directly involves technology.
+- Pakistan News: Pakistan's tech, telecom, fintech, IT-export, or digital-economy developments. NOT general Pakistani politics, non-tech economic news, or non-tech infrastructure.
+- Technology: Software, hardware, chips, semiconductors, cloud, cybersecurity, startups, dev tools. NOT AI-specific news (that belongs in the AI category).
+- AI: ONLY news directly about artificial intelligence — models (GPT, Gemini, Claude, LLM), AI regulation, AI company funding, AI products/deployments. Do NOT place finance or cyber news here just to fill the slot.
+- Business: Tech-sector business news — tech earnings, tech M&A, tech IPOs, VC funding in tech companies. NOT general market/economy news unrelated to technology.
 
 STRICT CONTENT RULES:
 - NEVER include sports, cricket, football, soccer, World Cup, Olympics, entertainment, showbiz, celebrity, film, music news.
+- NEVER include general war, military conflict, or election coverage unless the article is specifically about technology's role in it (e.g. defense tech, cyberwarfare, export controls).
+- Every category must be framed through its relevance to a technology company. If "Why this matters" doesn't naturally connect to a tech business, the article was miscategorized by the pipeline — still summarize it accurately, but keep the "why it matters" honest and specific rather than forcing a stretch.
 - ONLY include news from articles provided. DO NOT fabricate or infer from outside knowledge.
 - Each article is tagged with a "Category" hint — use it as the primary placement signal.
-- If there is no relevant article for a category, write: "<ul><li>Limited coverage from selected sources today.</li></ul>"
-- Aim for 2-3 items per category where articles are available.
+- Every category below has already been filtered for tech relevance before reaching you — use the articles provided for each category rather than leaving it empty.
+- Include up to 3 items per category, and always at least 1 if any article was provided for that category.
+- If NO articles are tagged with a given category anywhere in the list below (not even one), still output its <h3> header, followed by exactly: <ul><li>No tech-relevant coverage from today's sources.</li></ul> — do NOT invent, infer, or borrow content from another category's articles to fill it.
 
 STRICT WRITING STYLE:
 - News Item: MAX 1-2 lines summary. BOLD 2-3 key words using <b>HTML</b>.
-- Impact line: New line starting with "<b>Why this matters:</b>" — MAX 1 line, NOT bold.
+- Impact line: New line starting with "<b>Why this matters:</b>" — MAX 1 line, NOT bold, and specific to how it affects a technology company.
 - At the end of each "Why this matters" line, write: [READ_MORE:N] where N is the Article number.
 
 SOURCES: ${user.sources.join(', ')}

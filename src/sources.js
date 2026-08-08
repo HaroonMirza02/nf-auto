@@ -6,7 +6,7 @@ module.exports = {
     bbc: { label: 'BBC News', domain: 'bbc.com' },
     guardian: { label: 'The Guardian', domain: 'theguardian.com' },
 
-    // Pakistan News
+    // Pakistan News — general
     dawn: { label: 'Dawn', domain: 'dawn.com' },
     brecorder: { label: 'Business Recorder', domain: 'brecorder.com' },
     'business-recorder': { label: 'Business Recorder', domain: 'brecorder.com' },
@@ -14,6 +14,11 @@ module.exports = {
     'ary-news': { label: 'ARY News', domain: 'arynews.tv' },
     'geo-news': { label: 'Geo News', domain: 'geo.tv' },
     'the-news': { label: 'The News', domain: 'thenews.com.pk' },
+
+    // Pakistan Tech & Business (V2 additions)
+    'propakistani': { label: 'ProPakistani', domain: 'propakistani.pk' },
+    'techjuice': { label: 'TechJuice', domain: 'techjuice.pk' },
+    'profit-pk': { label: 'Profit by Pakistan Today', domain: 'profit.pakistantoday.com.pk' },
 
     // Technology
     techcrunch: { label: 'TechCrunch', domain: 'techcrunch.com' },
