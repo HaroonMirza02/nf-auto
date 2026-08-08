@@ -172,9 +172,9 @@ async function fetchPSXStocks(psxStocks) {
 /**
  * Parses a dps.psx.com.pk company page and extracts current price and LDCP.
  *
- * The page text contains patterns like:
- *   "Rs.136.52-0.05  (-0.04%)"   — current price with day change
- *   "LDCP136.57"                 — last day closing price
+ * The server-rendered HTML (not JS-hydrated) contains:
+ *   <div class="quote__close">Rs.136.52</div>
+ *   LDCP</div><div class="stats_value">136.57</div>
  *
  * @param {string} html   - Page HTML text
  * @param {string} ticker - For logging only
@@ -182,33 +182,44 @@ async function fetchPSXStocks(psxStocks) {
  */
 function parsePSXPage(html, ticker) {
     try {
-        // Extract current price: "Rs." followed by digits and optionals
-        // The format on the live page is: Rs.136.52-0.05  (-0.04%)
-        const currentMatch = html.match(/Rs\.([\d,]+(?:\.\d+)?)/);
-        // Extract LDCP (Last Day Closing Price)
-        const ldcpMatch    = html.match(/LDCP([\d,]+(?:\.\d+)?)/);
+        // Current price: inside quote__close div — "Rs.136.52"
+        const currentMatch = html.match(/class="quote__close"[^>]*>\s*Rs\.([\d,]+(?:\.\d+)?)/);
+        // LDCP: immediately after LDCP label in stats section
+        const ldcpMatch    = html.match(/LDCP<\/div>\s*<div[^>]*>([\d,]+(?:\.\d+)?)<\/div>/);
 
-        if (!currentMatch || !ldcpMatch) return null;
+        if (!currentMatch) {
+            // Fallback: try bare Rs. pattern anywhere on page
+            const bareRs = html.match(/Rs\.([\d,]+(?:\.\d+)?)/);
+            const bareLdcp = html.match(/LDCP[^<]*<[^>]+>([\d,]+(?:\.\d+)?)/);
+            if (!bareRs || !bareLdcp) return null;
+            const current = parseFloat(bareRs[1].replace(/,/g, ''));
+            const prev    = parseFloat(bareLdcp[1].replace(/,/g, ''));
+            if (isNaN(current) || isNaN(prev) || current === 0) return null;
+            return buildStockData(ticker, current, prev);
+        }
 
         const current = parseFloat(currentMatch[1].replace(/,/g, ''));
-        const prev    = parseFloat(ldcpMatch[1].replace(/,/g, ''));
+        const prev    = ldcpMatch ? parseFloat(ldcpMatch[1].replace(/,/g, '')) : current;
 
-        if (isNaN(current) || isNaN(prev) || current === 0) return null;
+        if (isNaN(current) || current === 0) return null;
 
-        const diff = current - prev;
-        const pct  = prev > 0 ? ((diff / prev) * 100).toFixed(1) : '0.0';
-
-        return {
-            ticker,
-            current: current.toFixed(2),
-            prev:    prev.toFixed(2),
-            diff:    diff.toFixed(2),
-            pct:     `${pct}%`
-        };
+        return buildStockData(ticker, current, prev);
 
     } catch {
         return null;
     }
+}
+
+function buildStockData(ticker, current, prev) {
+    const diff = current - prev;
+    const pct  = prev > 0 ? ((diff / prev) * 100).toFixed(1) : '0.0';
+    return {
+        ticker,
+        current: current.toFixed(2),
+        prev:    prev.toFixed(2),
+        diff:    diff.toFixed(2),
+        pct:     `${pct}%`
+    };
 }
 
 /**
@@ -219,13 +230,7 @@ function staticPSXEntry(stock) {
     const pct  = stock.prev_price > 0
         ? ((diff / stock.prev_price) * 100).toFixed(1)
         : '0.0';
-    return {
-        ticker:  stock.ticker,
-        current: stock.current_price.toFixed(2),
-        prev:    stock.prev_price.toFixed(2),
-        diff:    diff.toFixed(2),
-        pct:     `${pct}%`
-    };
+    return buildStockData(stock.ticker, stock.current_price, stock.prev_price);
 }
 
 module.exports = { fetchUSStocks, calculatePSXStocks, fetchPSXStocks };

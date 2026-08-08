@@ -14,11 +14,11 @@
  *   - Rate: 30 credits / 15 min (≈ 2 req/min sustained)
  *
  * Budget used by this module per daily run:
- *   - 1 broad domain fetch (all unique domains, no q) = 1 credit
- *   - 5 category-query fetches (one per category)      = 5 credits
- *   - 3 Pakistan-specific supplemental fetches          = 3 credits
- *   ─────────────────────────────────────────────────────────────
- *   TOTAL: 9 credits per run  (well within 200/day limit)
+ *   - 2 broad domain chunk fetches (9 domains split into groups of 5)  = 2 credits
+ *   - 5 category-query fetches (one per category hint)                 = 5 credits
+ *   - 3 NewsData native category fetches (technology/business/science) = 3 credits
+ *   - 3 Pakistan-specific supplemental fetches                         = 3 credits
+ *   TOTAL: ~13 credits per run  (well within 200/day limit)
  *
  * The pool returned typically contains 80–120 unique articles before
  * any relevance filtering. After filtering it yields ~40–60 usable
@@ -223,6 +223,19 @@ async function fetchNewsPool(users) {
         const results = await fetchFromNewsData(
             { q: hint },
             `category query: ${category}`
+        );
+        allArticles.push(...results);
+        await new Promise(r => setTimeout(r, 600));
+    }
+
+    // 3b. NewsData also supports a `category` parameter — fire one per major
+    //     category without a q filter to capture headlines that don't use the
+    //     exact keyword phrases we picked but are still relevant.
+    const NEWSDATA_CATEGORIES = ['technology', 'business', 'science'];
+    for (const cat of NEWSDATA_CATEGORIES) {
+        const results = await fetchFromNewsData(
+            { category: cat },
+            `NewsData category: ${cat}`
         );
         allArticles.push(...results);
         await new Promise(r => setTimeout(r, 600));

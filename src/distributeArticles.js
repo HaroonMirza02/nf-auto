@@ -60,43 +60,40 @@ const EXCLUDE_KEYWORDS = [
 const CATEGORY_KEYWORDS = {
     'Global News': [
         'global', 'world', 'international', 'geopolitics', 'diplomatic', 'policy',
-        'united nations', 'un summit', 'nato', 'sanctions', 'trade war', 'tariff',
+        'united nations', 'nato', 'sanctions', 'trade war', 'tariff',
         'bilateral', 'foreign minister', 'state department', 'g7', 'g20',
-        'chip export', 'export control', 'tech regulation', 'digital trade'
+        'chip export', 'export control', 'tech regulation', 'digital trade',
+        'regulation', 'government'
     ],
     'Pakistan News': [
         'pakistan', 'islamabad', 'karachi', 'lahore', 'peshawar', 'quetta',
-        'psx', 'sbp', 'state bank of pakistan', 'imf pakistan', 'rupee', 'pta',
-        'ptcl', 'secp', 'ecc', 'federal budget', 'nepra', 'ogra',
-        'sindh', 'punjab', 'khyber', 'balochistan',
-        'pakistan tech', 'pakistan startup', 'pakistan fintech',
-        'pakistan digital', 'pakistan telecom', 'pakistan it',
-        'pakistan business', 'pakistan economy', 'pakistan investment'
+        'psx', 'sbp', 'rupee', 'pta', 'ptcl', 'secp', 'nepra', 'ogra',
+        'sindh', 'punjab', 'khyber', 'balochistan'
     ],
     Technology: [
-        'technology', 'software', 'hardware', 'cloud computing', 'cybersecurity',
-        'chip', 'semiconductor', 'digital transformation', 'startup', 'saas',
-        'api', 'developer', 'open source', 'quantum computing', 'robotics',
-        'drone technology', 'satellite', 'data center', '5g', '6g',
-        'fiber optic', 'broadband', 'encryption', 'zero trust', 'devops',
-        'kubernetes', 'microservices', 'edge computing', 'iot'
+        'technology', 'tech', 'software', 'hardware', 'cybersecurity',
+        'chip', 'semiconductor', 'digital', 'startup', 'saas',
+        'developer', 'open source', 'quantum', 'robotics',
+        'satellite', 'data center', '5g', '6g', 'broadband',
+        'encryption', 'cloud', 'cyber', 'computing', 'platform',
+        'app', 'device', 'network', 'internet', 'infrastructure'
     ],
     AI: [
         'artificial intelligence', 'machine learning', 'deep learning', 'llm',
         'large language model', 'generative ai', 'chatbot', 'openai', 'gemini',
         'claude', 'gpt', 'neural network', 'computer vision', 'nlp',
-        'natural language processing', 'ai model', 'ai agent', 'ai chip',
-        'nvidia ai', 'foundation model', 'ai regulation', 'ai safety',
-        'anthropic', 'mistral', 'diffusion model', 'transformer model',
-        'reinforcement learning', 'ai ethics', 'ai governance'
+        'ai model', 'ai agent', 'ai chip', 'nvidia',
+        'foundation model', 'ai regulation', 'ai safety',
+        'anthropic', 'mistral', 'diffusion model', 'transformer',
+        'reinforcement learning', 'ai'
     ],
     Business: [
-        'venture capital', 'private equity', 'series a', 'series b', 'series c',
-        'ipo', 'acquisition', 'merger', 'tech earnings', 'tech revenue',
-        'funding round', 'valuation', 'unicorn', 'tech investment',
-        'tech stocks', 'nasdaq', 'software revenue', 'cloud revenue',
-        'tech layoffs', 'tech hiring', 'tech partnership', 'joint venture',
-        'market cap', 'quarterly earnings'
+        'venture capital', 'private equity', 'ipo', 'acquisition', 'merger',
+        'earnings', 'revenue', 'funding', 'valuation', 'unicorn', 'investment',
+        'stocks', 'nasdaq', 'market cap', 'shares', 'profit', 'loss',
+        'quarterly', 'annual results', 'layoffs', 'hiring', 'partnership',
+        'deal', 'finance', 'economy', 'investors', 'shareholders', 'trading',
+        'markets', 'growth', 'forecast', 'outlook'
     ]
 };
 
@@ -107,11 +104,18 @@ const CATEGORY_KEYWORDS = {
  * it mentions "world" or "market."
  */
 const TECH_ANCHOR_KEYWORDS = [
-    'technology', 'tech', 'artificial intelligence', 'software', 'hardware',
+    'technology', 'tech', 'artificial intelligence', 'ai', 'software', 'hardware',
     'digital', 'startup', 'platform', 'internet', 'cyber', 'cybersecurity',
     'data', 'cloud', 'chip', 'semiconductor', 'automation', 'robotics',
     'innovation', 'telecom', 'fintech', 'e-commerce', 'broadband', '5g',
-    'blockchain', 'saas', 'developer', 'api', 'iot', 'app', 'llm', 'ai model'
+    'blockchain', 'saas', 'developer', 'api', 'iot', 'llm',
+    // company names that anchor to tech sector
+    'nvidia', 'microsoft', 'google', 'apple', 'amazon', 'meta', 'openai',
+    'anthropic', 'tesla', 'salesforce', 'oracle', 'intel', 'amd', 'qualcomm',
+    'spacex', 'netflix', 'uber', 'lyft', 'airbnb',
+    // sector signals
+    'computing', 'network', 'infrastructure', 'device', 'app', 'operating system',
+    'cybersecurity', 'encryption', 'quantum', 'satellite'
 ];
 
 const REQUIRES_TECH_ANCHOR = {
@@ -126,7 +130,7 @@ const CATEGORY_MIN_SCORE = {
     'Global News':    1,
     'Pakistan News':  1,
     Technology:       1,
-    AI:               2,   // needs at least 2 hits to avoid weak matches
+    AI:               1,   // 'ai' keyword now uses whole-word matching so score 1 is safe
     Business:         1
 };
 

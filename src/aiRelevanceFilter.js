@@ -24,7 +24,7 @@
 require('dotenv').config();
 
 const GOOGLE_AI_KEY = process.env.GOOGLE_AI_KEY;
-const MODEL         = 'gemini-2.0-flash';
+const MODEL         = 'gemini-3.1-flash-lite';
 const ENDPOINT      = `https://generativelanguage.googleapis.com/v1/models/${MODEL}:generateContent?key=${GOOGLE_AI_KEY}`;
 
 const BATCH_SIZE    = 20;   // articles per Gemini call
