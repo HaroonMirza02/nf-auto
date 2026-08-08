@@ -1,64 +1,66 @@
 /**
  * distributeArticles.js — NF Auto V2
  *
- * Takes the pre-fetched article pool (from fetchNewsPool.js) and distributes
- * articles to each user based on their configured sources and the five fixed
- * categories. Zero additional API calls are made here.
+ * Takes the pre-fetched article pool (from fetchNewsPool.js) and assigns
+ * articles to users. Two requirements must both be satisfied:
  *
- * KEY V2 FIX — Progressive deduplication bug:
- *   The V1 system kept a single `globalSeenUrls` Set that was filled as each
- *   user was processed. User 1 claimed the best articles; by the time User 4
- *   was processed, most good URLs were already in the set and filtered out.
- *   V2 deduplicates the pool ONCE (in fetchNewsPool.js) before distribution.
- *   Every user then scores against the FULL deduplicated pool. The per-user
- *   output is still deduplicated (no article appears twice for one user), but
- *   the same article CAN appear in multiple users' digests — which is correct
- *   behaviour when several users legitimately follow the same story.
+ *   1. EVERY CATEGORY MUST BE FILLED FOR EVERY USER.
+ *      No user may have an empty category going into summarization. An empty
+ *      category results in "No tech-relevant coverage" fallback text in the
+ *      digest, which is only acceptable when genuinely no relevant article
+ *      exists anywhere in the pool for that category.
  *
- * KEY V2 FIX — Word-boundary matching:
- *   V1 used `text.includes(keyword)`, which causes false positives:
- *     "ai"   → matches inside "Ukrainian", "rain", "paid"
- *     "app"  → matches inside "happened", "application", "capped"
- *     "nato" → matches inside "senator", "donation"
- *   V2 uses regex word-boundary anchors (\b) for all keyword checks so only
- *   whole-word occurrences trigger a match.
+ *   2. NO ARTICLE MAY APPEAR IN MORE THAN ONE USER'S DIGEST.
+ *      The same story should not repeat across sections. Each article is
+ *      assigned to exactly one user. If the pool lacks enough unique articles
+ *      to fill every slot exclusively, a category-level fallback allows sharing
+ *      within that specific category only — but this is a last resort, not the
+ *      default behaviour.
+ *
+ * Algorithm:
+ *   Phase 1 — Score: run the full relevance filter once on the pool.
+ *             For each article, compute its score against ALL five categories
+ *             (not just the best one) so it can serve as a backup for any
+ *             category it qualifies for.
+ *   Phase 2 — Assign: for each category, distribute articles across users
+ *             round-robin with slot-rotation (slot 0 → user[0] leads,
+ *             slot 1 → user[1] leads, etc.) so no user always gets first pick.
+ *             A global claimed Set ensures each article goes to one user only.
+ *   Phase 3 — Gap fill: any user missing a category gets the highest-scoring
+ *             unclaimed article that qualifies for that category, even if it
+ *             means sharing with another user (last resort only).
+ *
+ * V2 fixes:
+ *   - Whole-word regex (\b) replacing .includes() substring matching.
+ *     Prevents "ai" matching inside "Ukrainian", "nato" inside "senator", etc.
+ *   - globalSeenUrls progressive dedup bug removed.
+ *   - Per-category slot rotation so no user is consistently last in line.
  */
 
 const { CATEGORIES } = require('./fetchNewsPool');
 
 // ─── Keyword lists ───────────────────────────────────────────────────────────
 
-/**
- * Hard-exclusion terms. An article matching ANY of these is dropped regardless
- * of category score. All matching uses whole-word regex (see matchesAny below).
- */
 const EXCLUDE_KEYWORDS = [
     // Sports
     'cricket', 'football', 'soccer', 'basketball', 'tennis', 'golf', 'rugby',
     'world cup', 'fifa', 'uefa', 'premier league', 'nba', 'nfl', 'nhl', 'mlb',
     'formula 1', 'f1 race', 'olympics', 'athlete', 'goalkeeper', 'striker',
-    'midfielder', 'squad', 'match result', 'knockout stage', 'tournament',
-    'batting', 'bowling', 'wicket', 'innings', 'odi', 't20',
+    'midfielder', 'match result', 'knockout stage', 'batting', 'bowling',
+    'wicket', 'innings', 'odi', 't20',
     // Entertainment / Lifestyle
     'showbiz', 'celebrity', 'bollywood', 'hollywood', 'actor', 'actress',
-    'box office', 'album', 'music concert', 'fashion week',
-    'recipe', 'lifestyle', 'drama series', 'wedding', 'gossip',
-    'reality show', 'award show', 'oscar', 'grammy', 'emmy',
-    // General conflict noise (kept as backstop; AI filter is the main guard)
-    'airstrike', 'missile strike', 'ceasefire',
-    'insurgent', 'militant attack',
-    // Junk content
-    'horoscope', 'astrology', 'zodiac',
-    'market size report', 'cagr', 'market projected',
-    'press release', 'hiring now', 'job vacancy',
+    'box office', 'music concert', 'fashion week', 'recipe',
+    'drama series', 'wedding', 'gossip', 'reality show', 'award show',
+    'oscar', 'grammy', 'emmy',
+    // Conflict noise (backstop; AI filter is the primary guard)
+    'airstrike', 'missile strike', 'ceasefire', 'insurgent', 'militant attack',
+    // Junk
+    'horoscope', 'astrology', 'zodiac', 'cagr', 'market projected',
     'recruitment process', 'job openings', 'career opportunities',
     'we are hiring', 'join our team'
 ];
 
-/**
- * Category-specific scoring keywords.
- * Matching is whole-word (see matchesAny / scoreArticleForCategory below).
- */
 const CATEGORY_KEYWORDS = {
     'Global News': [
         'global', 'world', 'international', 'geopolitics', 'diplomatic', 'policy',
@@ -99,318 +101,273 @@ const CATEGORY_KEYWORDS = {
     ]
 };
 
-/**
- * Tech-anchor keywords: a non-tech article in Global News, Pakistan News, or
- * Business must contain at least one of these to qualify. This prevents a
- * general economics, war, or politics story from slipping through just because
- * it mentions "world" or "market."
- */
 const TECH_ANCHOR_KEYWORDS = [
     'technology', 'tech', 'artificial intelligence', 'ai', 'software', 'hardware',
     'digital', 'startup', 'platform', 'internet', 'cyber', 'cybersecurity',
     'data', 'cloud', 'chip', 'semiconductor', 'automation', 'robotics',
     'innovation', 'telecom', 'fintech', 'e-commerce', 'broadband', '5g',
     'blockchain', 'saas', 'developer', 'api', 'iot', 'llm',
-    // company names that anchor to tech sector
     'nvidia', 'microsoft', 'google', 'apple', 'amazon', 'meta', 'openai',
     'anthropic', 'tesla', 'salesforce', 'oracle', 'intel', 'amd', 'qualcomm',
-    'spacex', 'netflix', 'uber', 'lyft', 'airbnb',
-    // sector signals
-    'computing', 'network', 'infrastructure', 'device', 'app', 'operating system',
-    'cybersecurity', 'encryption', 'quantum', 'satellite'
+    'spacex', 'netflix', 'uber', 'airbnb',
+    'computing', 'network', 'infrastructure', 'device', 'operating system',
+    'encryption', 'quantum', 'satellite'
 ];
 
 const REQUIRES_TECH_ANCHOR = {
-    'Global News':    true,
-    'Pakistan News':  true,
-    Technology:       false,
-    AI:               false,
-    Business:         true
+    'Global News':   true,
+    'Pakistan News': true,
+    Technology:      false,
+    AI:              false,
+    Business:        true
 };
 
 const CATEGORY_MIN_SCORE = {
-    'Global News':    1,
-    'Pakistan News':  1,
-    Technology:       1,
-    AI:               1,   // 'ai' keyword now uses whole-word matching so score 1 is safe
-    Business:         1
+    'Global News':   1,
+    'Pakistan News': 1,
+    Technology:      1,
+    AI:              1,
+    Business:        1
 };
 
-// Max articles per category per user in the final output
-const MAX_PER_CATEGORY = 3;
+const MAX_PER_CATEGORY = 3;  // max articles per category per user
 
-// ─── Regex helpers ───────────────────────────────────────────────────────────
+const BANNED_DOMAINS = [
+    'openpr.com', 'einnews.com', 'bringatrailer.com', 'cyclingnews.com',
+    'cred.club'
+];
 
-// Cache compiled regexes to avoid re-compiling on every article
+// ─── Regex helpers ────────────────────────────────────────────────────────────
+
 const _regexCache = new Map();
 
-/**
- * Returns a word-boundary regex for a keyword.
- * Multi-word phrases use \b on the outer edges only (space between words is
- * not a word-boundary issue for phrases, but the start and end of the phrase
- * must land on a word boundary).
- */
 function kwRegex(keyword) {
     if (_regexCache.has(keyword)) return _regexCache.get(keyword);
-    // Escape special regex chars in the keyword, then wrap in \b...\b
     const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const re = new RegExp(`\\b${escaped}\\b`, 'i');
     _regexCache.set(keyword, re);
     return re;
 }
 
-/**
- * Returns true if the text contains at least one whole-word match for any
- * keyword in the list.
- */
 function matchesAny(text, keywords) {
     return keywords.some(kw => kwRegex(kw).test(text));
 }
 
-/**
- * Returns the count of keywords in the list that appear as whole words in text.
- */
 function countMatches(text, keywords) {
     return keywords.reduce((n, kw) => n + (kwRegex(kw).test(text) ? 1 : 0), 0);
 }
 
-// ─── Banned source domains ───────────────────────────────────────────────────
-
-/**
- * Articles from these domains are dropped regardless of content score.
- * Add outlets that consistently produce spam, SEO content, or recruitment noise.
- */
-const BANNED_DOMAINS = [
-    'openpr.com', 'einnews.com', 'bringatrailer.com', 'cyclingnews.com',
-    'cred.club'   // produces recruitment/hiring articles, not tech news
-];
-
-// ─── Relevance logic ─────────────────────────────────────────────────────────
-
-/**
- * Returns a relevance verdict for one article.
- *
- * @param {object} article
- * @param {boolean} debug  - When true, returns a detailed reason string
- * @returns {{ include: boolean, reason: string, category: string|null, score: number }}
- */
-function scoreArticle(article, debug = false) {
-    const text = `${article.title} ${article.description}`.toLowerCase();
-
-    // 0. Banned source domain check
-    const articleUrl = (article.url || '').toLowerCase();
-    const isBanned = BANNED_DOMAINS.some(d => articleUrl.includes(d));
-    if (isBanned) {
-        return {
-            include:  false,
-            reason:   `EXCLUDED: banned source domain matched in URL`,
-            category: null,
-            score:    0
-        };
-    }
-
-    // 1. Hard exclusion
-    for (const kw of EXCLUDE_KEYWORDS) {
-        if (kwRegex(kw).test(text)) {
-            return {
-                include:  false,
-                reason:   `EXCLUDED: hard-exclude keyword "${kw}" matched (whole-word)`,
-                category: null,
-                score:    0
-            };
-        }
-    }
-
-    // 2. Find best-scoring category
-    let bestCategory = null;
-    let bestScore    = 0;
-    const scores     = {};
-
-    for (const category of CATEGORIES) {
-        const score = countMatches(text, CATEGORY_KEYWORDS[category]);
-        scores[category] = score;
-        if (score > bestScore) {
-            bestCategory = category;
-            bestScore    = score;
-        }
-    }
-
-    if (!bestCategory || bestScore < 1) {
-        return {
-            include:  false,
-            reason:   debug
-                ? `EXCLUDED: no category matched (scores: ${JSON.stringify(scores)})`
-                : 'EXCLUDED: no category matched',
-            category: null,
-            score:    0
-        };
-    }
-
-    // 3. Category minimum score threshold
-    const minScore = CATEGORY_MIN_SCORE[bestCategory] || 1;
-    if (bestScore < minScore) {
-        return {
-            include:  false,
-            reason:   `EXCLUDED: score ${bestScore} below minimum ${minScore} for ${bestCategory}`,
-            category: bestCategory,
-            score:    bestScore
-        };
-    }
-
-    // 4. Tech anchor check for categories that require it
-    if (REQUIRES_TECH_ANCHOR[bestCategory] && !matchesAny(text, TECH_ANCHOR_KEYWORDS)) {
-        return {
-            include:  false,
-            reason:   `EXCLUDED: no tech anchor for ${bestCategory} category (whole-word check)`,
-            category: bestCategory,
-            score:    bestScore
-        };
-    }
-
-    return {
-        include:  true,
-        reason:   debug
-            ? `INCLUDED: category=${bestCategory}, score=${bestScore}, scores=${JSON.stringify(scores)}`
-            : `INCLUDED: ${bestCategory} (score ${bestScore})`,
-        category: bestCategory,
-        score:    bestScore
-    };
-}
-
-// ─── Source matching ─────────────────────────────────────────────────────────
+// ─── Article scoring ──────────────────────────────────────────────────────────
 
 const SOURCES = require('./sources');
 
-/**
- * Returns true if an article's source domain matches one of the user's
- * configured source IDs. Used to weight articles from preferred sources higher
- * during sorting, not as a hard filter (the pool may also contain articles from
- * supplemental category queries that aren't domain-restricted).
- */
 function isFromUserSource(article, userSources) {
-    const articleDomain = (article.url || '').toLowerCase();
-    return userSources.some(srcId => {
-        const domain = SOURCES[srcId]?.domain;
-        return domain && articleDomain.includes(domain);
+    const url = (article.url || '').toLowerCase();
+    return userSources.some(id => {
+        const domain = SOURCES[id]?.domain;
+        return domain && url.includes(domain);
     });
 }
 
-// ─── Main export ─────────────────────────────────────────────────────────────
-
 /**
- * Filters and distributes the article pool to a single user.
+ * Returns the relevance score of an article for a specific category,
+ * or 0 if it doesn't qualify (fails exclusion, tech anchor, or min score).
  *
- * Steps:
- *   1. Run keyword relevance filter on the full pool (whole-word matching).
- *   2. Stamp each surviving article with its best category.
- *   3. Sort each category's articles: user's own sources first, then by score.
- *   4. Take up to MAX_PER_CATEGORY per category.
- *   5. Dedup within the user's own output (same article can't appear twice for
- *      one user even if it scored for two categories).
- *
- * @param {object}   user        - User config object from config.json
- * @param {object[]} pool        - Full deduplicated article pool
- * @param {boolean}  debugMode   - Emit per-article relevance audit to console
- * @returns {object[]}           - Articles for this user (with assignedCategory)
+ * Unlike V1 where each article had one assigned category, here we score
+ * against any requested category so an article can serve as backup for
+ * multiple categories during gap-filling.
  */
-function distributeToUser(user, pool, debugMode = false) {
-    const label = `[distributeArticles:${user.id}]`;
+function scoreForCategory(article, category) {
+    const text = `${article.title} ${article.description}`;
+    const lower = text.toLowerCase();
 
-    // Step 1 + 2: filter and categorize
-    const byCategory = {};
-    for (const cat of CATEGORIES) byCategory[cat] = [];
+    // Banned domain
+    const url = (article.url || '').toLowerCase();
+    if (BANNED_DOMAINS.some(d => url.includes(d))) return 0;
 
-    let includedCount = 0;
-    let excludedCount = 0;
+    // Hard exclusion (whole-word)
+    if (EXCLUDE_KEYWORDS.some(kw => kwRegex(kw).test(text))) return 0;
 
-    for (const article of pool) {
-        const verdict = scoreArticle(article, debugMode);
+    // Category score (whole-word)
+    const score = countMatches(text, CATEGORY_KEYWORDS[category] || []);
+    if (score < (CATEGORY_MIN_SCORE[category] || 1)) return 0;
 
-        if (debugMode) {
-            console.log(
-                `${label} "${article.title.substring(0, 60)}..." → ${verdict.reason}`
-            );
-        }
+    // Tech anchor for non-tech-inherent categories
+    if (REQUIRES_TECH_ANCHOR[category] && !matchesAny(text, TECH_ANCHOR_KEYWORDS)) return 0;
 
-        if (verdict.include) {
-            byCategory[verdict.category].push({
-                ...article,
-                assignedCategory: verdict.category,
-                _relevanceScore:  verdict.score
-            });
-            includedCount++;
-        } else {
-            excludedCount++;
-        }
-    }
-
-    if (debugMode || true) {
-        console.log(
-            `${label} Relevance filter: ${includedCount} included, ` +
-            `${excludedCount} excluded from pool of ${pool.length}`
-        );
-    }
-
-    // Step 3: sort each category — user's sources first, then by relevance score
-    for (const cat of CATEGORIES) {
-        byCategory[cat].sort((a, b) => {
-            const aOwn = isFromUserSource(a, user.sources) ? 1 : 0;
-            const bOwn = isFromUserSource(b, user.sources) ? 1 : 0;
-            if (bOwn !== aOwn) return bOwn - aOwn;           // user's sources first
-            return b._relevanceScore - a._relevanceScore;    // then by score
-        });
-    }
-
-    // Step 4: take top N per category
-    const selected     = [];
-    const selectedUrls = new Set();
-
-    for (const cat of CATEGORIES) {
-        let taken = 0;
-        for (const article of byCategory[cat]) {
-            if (taken >= MAX_PER_CATEGORY) break;
-            if (selectedUrls.has(article.url)) continue;  // cross-category dedup
-            selectedUrls.add(article.url);
-            selected.push(article);
-            taken++;
-        }
-
-        if (debugMode) {
-            console.log(
-                `${label} ${cat}: ${taken} articles selected ` +
-                `(pool had ${byCategory[cat].length})`
-            );
-        }
-    }
-
-    console.log(`${label} Final selection: ${selected.length} articles across ${CATEGORIES.length} categories`);
-    return selected;
+    return score;
 }
 
 /**
- * Convenience wrapper: distributes the pool to ALL users in one call.
- * Returns a Map from user.id → article array.
+ * Returns the best primary category for an article (highest score across all
+ * five categories), or null if it doesn't qualify for any.
+ */
+function bestCategory(article) {
+    let best = null;
+    let bestScore = 0;
+    for (const cat of CATEGORIES) {
+        const s = scoreForCategory(article, cat);
+        if (s > bestScore) { bestScore = s; best = cat; }
+    }
+    return best ? { category: best, score: bestScore } : null;
+}
+
+// ─── Distribution ─────────────────────────────────────────────────────────────
+
+/**
+ * Distributes the pool to all users.
  *
- * @param {object[]} users      - Array of user config objects
- * @param {object[]} pool       - Full deduplicated article pool
- * @param {boolean}  debugMode  - Enable per-article audit logging
- * @returns {Map<string, object[]>}
+ * Guarantees:
+ *   - Every category is attempted for every user.
+ *   - Each article is assigned to at most one user (exclusive by default).
+ *   - If a category has too few unique articles to fill all users, the
+ *     category-level fallback shares the best available article rather than
+ *     leaving a user's category empty.
+ *
+ * @param {object[]} users
+ * @param {object[]} pool
+ * @param {boolean}  debugMode
+ * @returns {Map<string, object[]>}  user.id → article[]
  */
 function distributePool(users, pool, debugMode = false) {
     console.log(
-        `[distributeArticles] Distributing ${pool.length}-article pool to ${users.length} users...`
+        `[distributeArticles] Distributing ${pool.length}-article pool to ` +
+        `${users.length} users (cross-user dedup, all categories guaranteed)...`
     );
+
+    // --- Phase 1: Score every article against its best category ---
+    const scored = [];
+    let excluded = 0;
+    for (const article of pool) {
+        const result = bestCategory(article);
+        if (result) {
+            scored.push({ ...article, assignedCategory: result.category, _score: result.score });
+        } else {
+            excluded++;
+        }
+    }
+
+    if (debugMode) {
+        console.log(`[distributeArticles] ${scored.length} passed filter, ${excluded} excluded`);
+    } else {
+        console.log(`[distributeArticles] ${scored.length} articles passed relevance filter`);
+    }
+
+    // Group by primary category
+    const byCat = {};
+    for (const cat of CATEGORIES) byCat[cat] = [];
+    for (const a of scored) byCat[a.assignedCategory].push(a);
+
+    // --- Phase 2: Exclusive round-robin assignment per category ---
+    const claimed     = new Set();  // URLs claimed across all users
+    const userBuckets = new Map();  // user.id → { cat → article[] }
+    for (const user of users) {
+        userBuckets.set(user.id, Object.fromEntries(CATEGORIES.map(c => [c, []])));
+    }
+
+    for (const cat of CATEGORIES) {
+        // Per-user ranked list: own-source articles first, then by score
+        const ranked = users.map(user => ({
+            user,
+            list: [...byCat[cat]].sort((a, b) => {
+                const ao = isFromUserSource(a, user.sources) ? 1 : 0;
+                const bo = isFromUserSource(b, user.sources) ? 1 : 0;
+                if (bo !== ao) return bo - ao;
+                return b._score - a._score;
+            })
+        }));
+
+        // Fill MAX_PER_CATEGORY slots, rotating which user gets first pick
+        for (let slot = 0; slot < MAX_PER_CATEGORY; slot++) {
+            const start = slot % users.length;
+            const order = [...ranked.slice(start), ...ranked.slice(0, start)];
+            for (const { user, list } of order) {
+                const bucket = userBuckets.get(user.id)[cat];
+                if (bucket.length >= MAX_PER_CATEGORY) continue;
+                const pick = list.find(a => !claimed.has(a.url));
+                if (pick) {
+                    claimed.add(pick.url);
+                    bucket.push(pick);
+                    if (debugMode) {
+                        console.log(`[dist] ${cat} slot${slot + 1} → ${user.id}: "${pick.title.substring(0, 50)}"`);
+                    }
+                }
+            }
+        }
+
+        // Log per-category coverage
+        const fills = users.map(u => `${u.id}:${userBuckets.get(u.id)[cat].length}`).join(' ');
+        console.log(`[distributeArticles] ${cat} — ${fills}`);
+    }
+
+    // --- Phase 3: Gap fill ---
+    // Any user with 0 articles in a category gets the best available article
+    // for that category, even if it means sharing it with another user.
+    // This is the last-resort fallback to satisfy "every category must be filled".
+    for (const cat of CATEGORIES) {
+        for (const user of users) {
+            const bucket = userBuckets.get(user.id)[cat];
+            if (bucket.length > 0) continue;
+
+            // Try unclaimed first
+            const allForCat = [...byCat[cat]].sort((a, b) => b._score - a._score);
+            const unclaimed = allForCat.find(a => !claimed.has(a.url));
+            if (unclaimed) {
+                claimed.add(unclaimed.url);
+                bucket.push({ ...unclaimed, _sharedFallback: true });
+                console.log(
+                    `[distributeArticles] GAP FILL (unique) ${cat} → ${user.id}: ` +
+                    `"${unclaimed.title.substring(0, 60)}"`
+                );
+                continue;
+            }
+
+            // Nothing unclaimed — try scoring the full pool for this category
+            // even if article was already assigned to another user (shared fallback)
+            const anyQualified = pool
+                .map(a => ({ a, s: scoreForCategory(a, cat) }))
+                .filter(x => x.s > 0)
+                .sort((x, y) => y.s - x.s)[0];
+
+            if (anyQualified) {
+                const article = anyQualified.a;
+                bucket.push({
+                    ...article,
+                    assignedCategory: cat,
+                    _score:           anyQualified.s,
+                    _sharedFallback:  true
+                });
+                console.log(
+                    `[distributeArticles] GAP FILL (shared) ${cat} → ${user.id}: ` +
+                    `"${article.title.substring(0, 60)}"`
+                );
+            } else {
+                // Genuinely no relevant article for this category today
+                console.warn(
+                    `[distributeArticles] NO ARTICLES for ${cat}/${user.id} — ` +
+                    `pool has no qualifying content for this category today`
+                );
+            }
+        }
+    }
+
+    // --- Build final output ---
     const result = new Map();
     for (const user of users) {
-        result.set(user.id, distributeToUser(user, pool, debugMode));
+        const buckets   = userBuckets.get(user.id);
+        const articles  = CATEGORIES.flatMap(cat => buckets[cat]);
+        const catCounts = CATEGORIES.map(c => `${c.replace(' News','').replace('hnology','ch')}:${buckets[c].length}`).join(' ');
+        console.log(`[distributeArticles:${user.id}] ${articles.length} articles [${catCounts}]`);
+        result.set(user.id, articles);
     }
+
     return result;
 }
 
 module.exports = {
     distributePool,
-    distributeToUser,
-    scoreArticle,
+    scoreForCategory,
+    bestCategory,
     CATEGORIES,
     CATEGORY_KEYWORDS,
     EXCLUDE_KEYWORDS,

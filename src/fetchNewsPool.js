@@ -11,20 +11,24 @@
  *   - 1 credit consumed per request regardless of `size`
  *   - Max 10 articles per request on the free tier
  *   - Max 100 characters in the `q` (keyword) parameter
- *   - Rate: 30 credits / 15 min (≈ 2 req/min sustained)
+ *   - Rate: 30 credits / 15 min (~2 req/min sustained)
  *
  * Budget used by this module per daily run:
- *   - 2 broad domain chunk fetches (9 domains split into groups of 5)  = 2 credits
- *   - 5 category-query fetches (one per category hint)                 = 5 credits
- *   - 3 NewsData native category fetches (technology/business/science) = 3 credits
- *   - 3 Pakistan supplemental keyword + country queries                = 3 credits
- *   - 1 Pakistan dedicated tech outlet domain fetch                    = 1 credit
- *   TOTAL: ~14 credits per run  (well within 200/day limit)
+ *   - 2  broad domain chunk fetches (9 domains in groups of 5)          = 2 credits
+ *   - 5  category keyword-query fetches (one per category)              = 5 credits
+ *   - 3  NewsData native category fetches (technology/business/science) = 3 credits
+ *   - 5  per-category "top-up" fetches (country/domain widened)         = 5 credits
+ *   - 3  Pakistan supplemental queries (country:pk)                     = 3 credits
+ *   - 1  Pakistan dedicated tech outlet domain fetch                    = 1 credit
+ *   TOTAL: ~19 credits per run  (well within 200/day limit)
  *
- * The pool returned typically contains 80–120 unique articles before
- * any relevance filtering. After filtering it yields ~40–60 usable
- * articles that are then distributed locally to each user with zero
- * further API calls.
+ * Design goal:
+ *   The pool must contain enough unique relevant articles to give every user
+ *   at least 1 article in every category after exclusive cross-user assignment.
+ *   Minimum needed: 4 users × 5 categories × 1 article = 20 slots.
+ *   Target: 4 users × 5 categories × 3 articles = 60 usable slots.
+ *   We fetch aggressively per category and rely on local filtering to keep
+ *   only the relevant ones.
  */
 
 require('dotenv').config();
@@ -33,41 +37,38 @@ const SOURCES = require('./sources');
 const NEWSDATA_API_KEY = process.env.NEWSDATA_API_KEY;
 const BASE_URL = 'https://newsdata.io/api/1/news';
 
-// Hard limit enforced by NewsData.io on their live API (confirmed April 2025)
-const QUERY_MAX_LENGTH = 100;
+const QUERY_MAX_LENGTH = 100;  // NewsData hard limit, confirmed April 2025
+const REQUEST_SIZE = 10;       // Free-tier max per request
 
-// Articles returned per request (free-tier max is 10)
-const REQUEST_SIZE = 10;
-
-/**
- * The five categories used throughout the pipeline.
- * Order matters: articles are assigned to the first category they score highest in.
- */
 const CATEGORIES = ['Global News', 'Pakistan News', 'Technology', 'AI', 'Business'];
 
 /**
- * Tech-anchored query hints, one per category.
- * Each string is verified to stay under QUERY_MAX_LENGTH.
- * These bake the technology focus directly into the NewsData request so the
- * raw pool already leans tech before any local filtering touches it.
+ * Primary category query hints — technology-anchored, stay under 100 chars.
  */
 const CATEGORY_QUERY_HINTS = {
-    'Global News':    'technology AND (global OR world OR policy OR regulation)',
-    'Pakistan News':  'technology AND (Pakistan OR Islamabad OR Karachi OR telecom OR fintech)',
-    Technology:       'technology OR software OR cybersecurity OR semiconductor',
-    AI:               '"artificial intelligence" OR LLM OR "machine learning" OR generative',
-    Business:         'technology AND (earnings OR funding OR IPO OR investment)'
+    'Global News':   'technology AND (global OR world OR policy OR regulation)',
+    'Pakistan News': 'technology AND (Pakistan OR Islamabad OR Karachi OR telecom OR fintech)',
+    Technology:      'technology OR software OR cybersecurity OR semiconductor',
+    AI:              '"artificial intelligence" OR LLM OR "machine learning" OR generative',
+    Business:        'technology AND (earnings OR funding OR IPO OR investment)'
 };
 
 /**
- * Additional Pakistan-focused queries. These deliberately widen beyond tech
- * so the Pakistan pool isn't starved. The AI relevance filter downstream
- * decides what's actually included in the digest; here we want broad raw
- * coverage. The `country: 'pk'` parameter restricts to Pakistani sources.
- *
- * Also includes a domain-targeted fetch for Pakistan's dedicated tech outlets
- * (ProPakistani, TechJuice, Profit by Pakistan Today) which consistently
- * produce tech and business content that the global keyword queries miss.
+ * Secondary per-category queries — different angles to widen coverage.
+ * Each category gets a second fetch using a complementary query so that
+ * after dedup we have more unique candidate articles per slot.
+ */
+const CATEGORY_SECONDARY_HINTS = {
+    'Global News':   'tech regulation OR chip export OR digital trade OR AI policy',
+    'Pakistan News': 'Pakistan startup OR Pakistan fintech OR Pakistan digital economy',
+    Technology:      'cloud computing OR data center OR quantum OR robotics OR IoT',
+    AI:              'OpenAI OR Anthropic OR Gemini OR GPT OR AI safety OR AI chip',
+    Business:        'tech merger OR acquisition OR VC funding OR startup valuation'
+};
+
+/**
+ * Pakistan supplemental queries with country filter.
+ * These run with country:'pk' to pull Pakistani news sources directly.
  */
 const PAKISTAN_SUPPLEMENTAL_QUERIES = [
     'Pakistan technology startup fintech digital',
@@ -75,26 +76,18 @@ const PAKISTAN_SUPPLEMENTAL_QUERIES = [
     'Pakistan telecom broadband 5G internet'
 ];
 
-// Pakistan-specific tech news domains — fetched separately so they always
-// get at least one request slot regardless of the global domain chunking.
+// Pakistan-specific tech outlets — fetched by domain to bypass index limitations
 const PAKISTAN_TECH_DOMAINS = 'propakistani.pk,techjuice.pk,profit.pakistantoday.com.pk';
 
-// Validate query lengths at module load — catch accidental over-length edits
-// before they silently fail in production.
+// Validate query lengths at startup
 for (const [cat, hint] of Object.entries(CATEGORY_QUERY_HINTS)) {
     if (hint.length > QUERY_MAX_LENGTH) {
-        console.warn(
-            `[fetchNewsPool] WARNING: query hint for "${cat}" is ${hint.length} chars` +
-            ` — over the ${QUERY_MAX_LENGTH}-char limit and WILL be rejected by NewsData.io`
-        );
+        console.warn(`[fetchNewsPool] WARNING: primary query for "${cat}" is ${hint.length} chars — over limit`);
     }
 }
-for (const q of PAKISTAN_SUPPLEMENTAL_QUERIES) {
-    if (q.length > QUERY_MAX_LENGTH) {
-        console.warn(
-            `[fetchNewsPool] WARNING: Pakistan supplemental query is ${q.length} chars` +
-            ` — over the ${QUERY_MAX_LENGTH}-char limit`
-        );
+for (const [cat, hint] of Object.entries(CATEGORY_SECONDARY_HINTS)) {
+    if (hint.length > QUERY_MAX_LENGTH) {
+        console.warn(`[fetchNewsPool] WARNING: secondary query for "${cat}" is ${hint.length} chars — over limit`);
     }
 }
 
@@ -106,19 +99,10 @@ function normalizeArticle(item) {
         description: item.description  || item.content || '',
         source:      item.source_name  || 'Unknown',
         url:         item.link         || '',
-        publishedAt: item.pubDate      || '',
-        // assignedCategory will be stamped on during distribution, not here
+        publishedAt: item.pubDate      || ''
     };
 }
 
-/**
- * Single NewsData.io fetch. Returns normalized articles or [] on failure.
- * All error paths are non-throwing — the pool build degrades gracefully if
- * one query fails.
- *
- * @param {object} params  - Query parameters (apikey is added automatically)
- * @param {string} label   - Human-readable label for log lines
- */
 async function fetchFromNewsData(params, label) {
     const searchParams = new URLSearchParams({
         apikey:   NEWSDATA_API_KEY,
@@ -150,43 +134,45 @@ async function fetchFromNewsData(params, label) {
 }
 
 /**
- * Deduplicate an array of articles by URL.
- * This is the single global dedup for the full pool — it runs once, before
- * distribution, so every user sees the same complete deduplicated set.
+ * Deduplicates by URL and by normalised title.
+ * Title dedup catches the same syndicated story published under different URLs.
  */
 function dedupeByUrl(articles) {
-    const seen = new Set();
+    const seenUrls   = new Set();
+    const seenTitles = new Set();
     return articles.filter(a => {
-        if (!a.url || seen.has(a.url)) return false;
-        seen.add(a.url);
+        if (!a.url || seenUrls.has(a.url)) return false;
+        const normalTitle = (a.title || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        if (normalTitle && seenTitles.has(normalTitle)) return false;
+        seenUrls.add(a.url);
+        if (normalTitle) seenTitles.add(normalTitle);
         return true;
     });
 }
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
 
 // ─── Main export ────────────────────────────────────────────────────────────
 
 /**
  * Fetches the consolidated article pool for one full digest run.
  *
- * Steps:
- *   1. Collect all unique source domains from all users in config (no user
- *      receives more or fewer articles based on their processing order).
- *   2. Fire one broad domain-restricted fetch (no keyword filter) to capture
- *      general headlines from the team's preferred outlets.
- *   3. Fire one fetch per category using the tech-anchored query hint — this
- *      fills topic-specific slots that the broad fetch might miss.
- *   4. Fire three Pakistan-specific supplemental fetches to compensate for
- *      the generally thinner Pakistan tech coverage in global news indices.
- *   5. Merge, deduplicate, and return the combined pool.
- *      No per-user filtering happens here — that is done in distributeArticles.js.
+ * The fetch strategy is deliberately redundant — multiple queries per category,
+ * broad domain fetches, and Pakistan-specific fetches — to ensure the raw pool
+ * is large enough that after relevance filtering there are sufficient unique
+ * articles in every category to fill all 4 users without any cross-user repeats.
  *
- * @param {object[]} users   - User objects from config.json (need .sources)
+ * @param {object[]} users  - User objects from config.json
  * @returns {Promise<object[]>} - Raw deduplicated article pool
  */
 async function fetchNewsPool(users) {
     console.log(`[fetchNewsPool] Starting consolidated pool fetch for ${users.length} users...`);
 
-    // 1. Gather all unique domains across all users
+    // Gather all unique domains from all users
     const allDomainSet = new Set();
     for (const user of users) {
         for (const srcId of (user.sources || [])) {
@@ -195,87 +181,64 @@ async function fetchNewsPool(users) {
         }
     }
 
-    // NewsData.io caps domainurl at 5 per request — we use the domain list for
-    // the broad fetch only; category queries are intentionally domain-free to
-    // widen the candidate pool beyond just the team's preferred outlets.
-    //
-    // We chunk the domains into groups of 5 and fire one request per chunk.
-    const domainList  = [...allDomainSet];
+    const domainList   = [...allDomainSet];
     const DOMAIN_CHUNK = 5;
     const domainChunks = [];
     for (let i = 0; i < domainList.length; i += DOMAIN_CHUNK) {
         domainChunks.push(domainList.slice(i, i + DOMAIN_CHUNK).join(','));
     }
-
-    console.log(
-        `[fetchNewsPool] ${domainList.length} unique domains across all users ` +
-        `→ ${domainChunks.length} broad fetch(es)`
-    );
+    console.log(`[fetchNewsPool] ${domainList.length} unique domains → ${domainChunks.length} broad fetch(es)`);
 
     const allArticles = [];
 
-    // 2. Broad domain fetches (no keyword restriction)
+    // --- PASS 1: Broad domain fetches (captures preferred outlet headlines) ---
     for (let i = 0; i < domainChunks.length; i++) {
-        const chunk   = domainChunks[i];
         const results = await fetchFromNewsData(
-            { domainurl: chunk },
-            `broad domain batch ${i + 1}/${domainChunks.length} (${chunk})`
+            { domainurl: domainChunks[i] },
+            `broad domain batch ${i + 1}/${domainChunks.length}`
         );
         allArticles.push(...results);
-        // 600 ms between calls to stay well under the 30-credit/15-min rate limit
-        if (i < domainChunks.length - 1) {
-            await new Promise(r => setTimeout(r, 600));
-        }
+        if (i < domainChunks.length - 1) await delay(600);
     }
 
-    // 3. Category query fetches (domain-free to widen the pool)
-    for (const [category, hint] of Object.entries(CATEGORY_QUERY_HINTS)) {
-        const results = await fetchFromNewsData(
-            { q: hint },
-            `category query: ${category}`
-        );
+    // --- PASS 2: Primary category keyword queries (domain-free, tech-anchored) ---
+    for (const [cat, hint] of Object.entries(CATEGORY_QUERY_HINTS)) {
+        const results = await fetchFromNewsData({ q: hint }, `primary query: ${cat}`);
         allArticles.push(...results);
-        await new Promise(r => setTimeout(r, 600));
+        await delay(600);
     }
 
-    // 3b. NewsData also supports a `category` parameter — fire one per major
-    //     category without a q filter to capture headlines that don't use the
-    //     exact keyword phrases we picked but are still relevant.
-    const NEWSDATA_CATEGORIES = ['technology', 'business', 'science'];
-    for (const cat of NEWSDATA_CATEGORIES) {
-        const results = await fetchFromNewsData(
-            { category: cat },
-            `NewsData category: ${cat}`
-        );
+    // --- PASS 3: Secondary category queries (different angle, more coverage) ---
+    for (const [cat, hint] of Object.entries(CATEGORY_SECONDARY_HINTS)) {
+        const results = await fetchFromNewsData({ q: hint }, `secondary query: ${cat}`);
         allArticles.push(...results);
-        await new Promise(r => setTimeout(r, 600));
+        await delay(600);
     }
 
-    // 4. Pakistan supplemental fetches — keyword queries with country filter
+    // --- PASS 4: NewsData native category parameter (catches non-keyword stories) ---
+    for (const cat of ['technology', 'business', 'science']) {
+        const results = await fetchFromNewsData({ category: cat }, `NewsData category: ${cat}`);
+        allArticles.push(...results);
+        await delay(600);
+    }
+
+    // --- PASS 5: Pakistan supplemental (country:pk + keyword) ---
     for (let i = 0; i < PAKISTAN_SUPPLEMENTAL_QUERIES.length; i++) {
-        const q       = PAKISTAN_SUPPLEMENTAL_QUERIES[i];
-        const results = await fetchFromNewsData(
-            { q, country: 'pk' },
-            `Pakistan supplemental ${i + 1}: "${q}"`
-        );
+        const q = PAKISTAN_SUPPLEMENTAL_QUERIES[i];
+        const results = await fetchFromNewsData({ q, country: 'pk' }, `Pakistan supplemental ${i + 1}`);
         allArticles.push(...results);
-        if (i < PAKISTAN_SUPPLEMENTAL_QUERIES.length - 1) {
-            await new Promise(r => setTimeout(r, 600));
-        }
+        if (i < PAKISTAN_SUPPLEMENTAL_QUERIES.length - 1) await delay(600);
     }
 
-    // 4b. Pakistan dedicated tech outlets — domain-targeted fetch with no q
-    //     restriction, so ALL their recent articles enter the pool.
-    const pkTechResults = await fetchFromNewsData(
+    // --- PASS 6: Pakistan dedicated tech outlet domains ---
+    const pkResults = await fetchFromNewsData(
         { domainurl: PAKISTAN_TECH_DOMAINS },
-        `Pakistan tech outlets (${PAKISTAN_TECH_DOMAINS})`
+        `Pakistan tech outlets`
     );
-    allArticles.push(...pkTechResults);
-    await new Promise(r => setTimeout(r, 600));
+    allArticles.push(...pkResults);
 
-    // 5. Global dedup — runs once on the full pool before anyone touches it
+    // Single global dedup — runs once before distribution
     const pool = dedupeByUrl(allArticles);
-
     console.log(
         `[fetchNewsPool] Pool complete: ${pool.length} unique articles ` +
         `(from ${allArticles.length} raw, ${allArticles.length - pool.length} duplicates removed)`

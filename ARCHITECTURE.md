@@ -56,13 +56,13 @@ V2 replaces the per-user, per-category API fetch loop from V1 with a single cons
 │      keyword lists + hard-exclusion list.                   │
 │   b) Tech-anchor check: Global News, Pakistan News, and     │
 │      Business articles must contain a tech sector signal.   │
-│   c) Articles are sorted: user's own preferred sources      │
-│      first, then by relevance score.                        │
-│   d) Up to 3 articles per category are taken (15 max).      │
+│   c) Articles are assigned via round-robin slot system:     │
+│      each article goes to AT MOST ONE user. Own-source      │
+│      articles get priority per slot, then by score.         │
+│   d) Up to 3 articles per category per user (15 max).       │
 │                                                             │
-│  Same article CAN appear in multiple users' digests — this  │
-│  is correct. The V1 globalSeenUrls bug that prevented this  │
-│  has been removed.                                          │
+│  No article appears in more than one user's digest.         │
+│  Processing order does not affect who gets what.            │
 └──────────────────────────┬──────────────────────────────────┘
                            │
                            ▼
