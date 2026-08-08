@@ -50,7 +50,9 @@ const EXCLUDE_KEYWORDS = [
     // Junk content
     'horoscope', 'astrology', 'zodiac',
     'market size report', 'cagr', 'market projected',
-    'press release', 'hiring now', 'job vacancy'
+    'press release', 'hiring now', 'job vacancy',
+    'recruitment process', 'job openings', 'career opportunities',
+    'we are hiring', 'join our team'
 ];
 
 /**
@@ -172,6 +174,17 @@ function countMatches(text, keywords) {
     return keywords.reduce((n, kw) => n + (kwRegex(kw).test(text) ? 1 : 0), 0);
 }
 
+// ─── Banned source domains ───────────────────────────────────────────────────
+
+/**
+ * Articles from these domains are dropped regardless of content score.
+ * Add outlets that consistently produce spam, SEO content, or recruitment noise.
+ */
+const BANNED_DOMAINS = [
+    'openpr.com', 'einnews.com', 'bringatrailer.com', 'cyclingnews.com',
+    'cred.club'   // produces recruitment/hiring articles, not tech news
+];
+
 // ─── Relevance logic ─────────────────────────────────────────────────────────
 
 /**
@@ -183,6 +196,18 @@ function countMatches(text, keywords) {
  */
 function scoreArticle(article, debug = false) {
     const text = `${article.title} ${article.description}`.toLowerCase();
+
+    // 0. Banned source domain check
+    const articleUrl = (article.url || '').toLowerCase();
+    const isBanned = BANNED_DOMAINS.some(d => articleUrl.includes(d));
+    if (isBanned) {
+        return {
+            include:  false,
+            reason:   `EXCLUDED: banned source domain matched in URL`,
+            category: null,
+            score:    0
+        };
+    }
 
     // 1. Hard exclusion
     for (const kw of EXCLUDE_KEYWORDS) {
