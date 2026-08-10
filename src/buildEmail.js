@@ -21,6 +21,10 @@ function buildEmail(userSections, date) {
     const psxPills = u.psxData.map(s => renderStockPill(s.ticker, s)).join('');
     const usPills = Object.keys(u.usStockData).map(t => renderStockPill(t, u.usStockData[t])).join('');
 
+    // Strip any empty-category fallback blocks Gemini may still output.
+    // Removes entire <h3>Category</h3><ul><li>No tech-relevant...</li></ul> blocks.
+    const cleanedHtml = stripEmptyCategoryBlocks(u.contentHtml);
+
     return `
     <a name="section-${u.id}"></a>
     <div style="margin-bottom: 60px; padding: 30px; background-color: #ffffff; border: 1px solid #f0f0f0; border-radius: 12px;">
@@ -40,7 +44,7 @@ function buildEmail(userSections, date) {
 
       <!-- Analyst Reports -->
       <div class="ai-content" style="font-size: 15px; font-weight: 300; color: #111111; line-height: 1.7; font-family: 'DM Sans', sans-serif;">
-        ${u.contentHtml}
+        ${cleanedHtml}
       </div>
 
       <div style="margin-top: 30px; text-align: center;">
@@ -106,3 +110,23 @@ function buildEmail(userSections, date) {
 }
 
 module.exports = { buildEmail };
+
+/**
+ * Strips any <h3>Category</h3> block whose only list item is a "no coverage"
+ * fallback. Gemini occasionally still outputs these despite being told not to.
+ *
+ * Patterns removed:
+ *   <h3>...</h3> <ul><li>No tech-relevant coverage...</li></ul>
+ *   <h3>...</h3> <ul><li>Limited coverage...</li></ul>
+ *   <h3>...</h3> <ul><li>No coverage available...</li></ul>
+ */
+function stripEmptyCategoryBlocks(html) {
+    if (!html) return html;
+
+    // Match an <h3> block followed immediately by a <ul> whose only <li>
+    // contains a "no/limited coverage" phrase, and remove both.
+    return html.replace(
+        /<h3[^>]*>[\s\S]*?<\/h3>\s*<ul[^>]*>\s*<li[^>]*>\s*(?:No tech-relevant coverage|Limited coverage|No coverage available|No relevant coverage)[^<]*<\/li>\s*<\/ul>/gi,
+        ''
+    ).replace(/\n{3,}/g, '\n\n').trim();
+}

@@ -63,11 +63,18 @@ const EXCLUDE_KEYWORDS = [
 
 const CATEGORY_KEYWORDS = {
     'Global News': [
-        'global', 'world', 'international', 'geopolitics', 'diplomatic', 'policy',
+        // Scope words
+        'global', 'world', 'international', 'cross-border', 'worldwide',
+        'multinational', 'countries', 'nations', 'geopolitics', 'diplomatic',
+        // Policy & regulatory
+        'policy', 'regulation', 'legislation', 'law', 'treaty', 'agreement',
         'united nations', 'nato', 'sanctions', 'trade war', 'tariff',
         'bilateral', 'foreign minister', 'state department', 'g7', 'g20',
         'chip export', 'export control', 'tech regulation', 'digital trade',
-        'regulation', 'government'
+        'government', 'authorities', 'parliament', 'congress', 'senate',
+        // Regional tech signals that are inherently global
+        'taiwan', 'tsmc', 'south korea', 'samsung', 'eu', 'europe',
+        'uae', 'gulf', 'middle east', 'india', 'china', 'japan'
     ],
     'Pakistan News': [
         'pakistan', 'islamabad', 'karachi', 'lahore', 'peshawar', 'quetta',

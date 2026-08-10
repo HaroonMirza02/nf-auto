@@ -1,133 +1,129 @@
 ====================================================
   NF AUTO V2 — DRY RUN (no email will be sent)
-  8/8/2026, 1:05:34 PM
+  8/10/2026, 10:00:21 AM
 ====================================================
 
 ── STEP 1: Consolidated pool fetch ──────────────────
 
 
-Pool: 106 unique articles fetched
+Pool: 128 unique articles fetched
 
 Top sources in pool:
-  Cnbc: 9
+  Nz Herald: 7
+  Openpr.com: 6
+  Shaw Local: 6
+  Google News: 6
   Reuters: 5
-  The Lincolnian Online: 5
-  Bloomberg: 4
-  Urdupoint: 4
-  Businesswire: 4
-  Google News: 4
-  Financialcontent: 3
-  Globe Newswire: 3
-  Bbns: 3
+  Business Recorder: 5
+  Financial Times: 5
+  Taipeitimes: 5
+  Newsroom: 3
+  Wion: 3
 
 ── STEP 2: Pool distribution ────────────────────────
 
-  Haroon Mirza: 8 articles after keyword filter
-  Zaid Bin Asim: 10 articles after keyword filter
-  M. Hassan: 10 articles after keyword filter
-  Ibrahim Malik: 9 articles after keyword filter
+  Haroon Mirza: 9 articles after keyword filter
+  Zaid Bin Asim: 9 articles after keyword filter
+  M. Hassan: 11 articles after keyword filter
+  Ibrahim Malik: 10 articles after keyword filter
 
 ── STEP 3: Per-user AI filter + summarization ───────
 
 
 ┌── Haroon Mirza ────────────────────────────────
-│  After keyword filter : 8 articles
+│  After keyword filter : 9 articles
 │  After AI filter      : 6 articles
 │  Global News (1):
-│    • Nvidia Faces New Pressure From U.S. Government
+│    • 'We cannot drink DATA': Google's $15 billion India data centre is being fought i
 │  Pakistan News (1):
-│    • Pakistan ideal destination for Chinese investment
-│  Technology (3):
-│    • Yoroll Launches AI Odyssey, an Interactive AI Film Created on Its AI-Native Vide
-│    • Micron Technology (NASDAQ:MU) Given New $1,150.00 Price Target at Citigroup
-│    • The AI-adjacent portfolio: Six Canadians stocks that could benefit from the AI b
+│    • AI, automation, robotics reshaping economies, societies across the world: Sindh 
+│  Technology (2):
+│    • DroneShield (ASX:DRO): What Is Driving Its Next Defence-Tech Push?
+│    • NamiRa: Iranian-developed manually curated microRNA database on cancers
+│  AI (1):
+│    • TechCrunch Mobility: Zoox prepares for launch and Uber’s AV empire
 │  Business (1):
-│    • Digital Turbine Q1 Earnings Call Highlights
+│    • Reviewing Vuzix (NASDAQ:VUZI) and BOE Varitronix (OTCMKTS:VARXF)
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 136.52 (prev 136.57, -0.0%)
-│    NETSOL: 126.98 (prev 127.76, -0.6%)
+│    SYS: 136.80 (prev 136.52, 0.2%)
+│    NETSOL: 126.00 (prev 126.98, -0.8%)
 │    ICI: 591.53 (prev 596.48, -0.8%)
-│    LUCK: 458.75 (prev 458.63, 0.0%)
-│    OGDC: 319.19 (prev 318.49, 0.2%)
+│    LUCK: 458.51 (prev 458.75, -0.1%)
+│    OGDC: 320.55 (prev 319.19, 0.4%)
 │  Calling Gemini to summarize...
-│  ⚠️  NOTICE: Fallback/limited coverage text detected in output
+│  ✓  Content looks populated
 └── Done: Haroon Mirza
 
 ┌── Zaid Bin Asim ───────────────────────────────
-│  After keyword filter : 10 articles
-│  After AI filter      : 9 articles
+│  After keyword filter : 9 articles
+│  After AI filter      : 7 articles
 │  Global News (2):
-│    • Pax Silica and WAICO may herald new era of bloc politics centered on technology
-│    • Don’t ignore AI risks until it’s too late, says CEA Nageswaran
-│  Pakistan News (1):
-│    • Pakistan ideal destination for Chinese investment
-│  Technology (2):
-│    • Amwell makes grant to new employees under inducement plan
-│    • Georgia data center boom brings billions — and growing backlash
+│    • TSMC Longtan science park discussions begin again
+│    • Let’s save AI use for the solutions, not the gimmicks
+│  Technology (1):
+│    • Arabsat and Libya Telecom & Technology sign Strategic Partnership Agreement - to
 │  AI (2):
-│    • Top College Degrees for the Highest-Paying AI Jobs in 2026
-│    • Article on Google partners to expand AI c...
+│    • NZ tech leaders want a nuclear-free moment for AI
+│    • IBPAP launches AI-powered ESG intelligence engine
 │  Business (2):
-│    • Intapp Q4 Earnings Call Highlights
-│    • Astera Labs Q2 Earnings Call Highlights
+│    • Head to Head Comparison: Celestica (NYSE:CLS) versus Vishay Intertechnology (NYS
+│    • Genpact (G) Lifts Tech Led Guidance, Is The Stock Still Cheap?
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 136.52 (prev 136.57, -0.0%)
-│    SHSML: 381.96 (prev 380.00, 0.5%)
-│    NETSOL: 126.98 (prev 127.76, -0.6%)
-│    OGDC: 319.19 (prev 318.49, 0.2%)
-│    PSO: 350.67 (prev 352.33, -0.5%)
+│    SYS: 136.80 (prev 136.52, 0.2%)
+│    SHSML: 381.96 (prev 381.96, 0.0%)
+│    NETSOL: 126.00 (prev 126.98, -0.8%)
+│    OGDC: 320.55 (prev 319.19, 0.4%)
+│    PSO: 351.25 (prev 350.67, 0.2%)
 │  Calling Gemini to summarize...
-│  ⚠️  NOTICE: Fallback/limited coverage text detected in output
+│  ✓  Content looks populated
 └── Done: Zaid Bin Asim
 
 ┌── M. Hassan ───────────────────────────────────
-│  After keyword filter : 10 articles
-│  After AI filter      : 9 articles
+│  After keyword filter : 11 articles
+│  After AI filter      : 7 articles
 │  Global News (2):
-│    • ByteDance Begins Biggest AI Build in China, Rules Out Rival-Copying Shortcut
-│    • AI, Poor Governance Aid Transnational Scams —UN Agency
+│    • 'AI took it all': The world's biggest PC makers are now buying Chinese memory ch
+│    • Turkey’s Industrial Climb: From Assembly Lines to Strategic Technology
 │  Pakistan News (1):
-│    • Pakistan ideal destination for Chinese investment
-│  Technology (3):
-│    • CNBC TechCheck Evening Edition: August 7, 2026
-│    • Tech reaffirming capex spend breathed new life into bull market, says Capital Ar
-│    • Citigroup Lowers Micron Technology (NASDAQ:MU) Price Target to $1,150.00
+│    • CM Murad lauds GU Tech’s innovation-driven education, urges youth to lead Pakist
+│  Technology (1):
+│    • Are Software and Digital Goods Tariff-Free? What Tech Companies Get Wrong in 202
 │  AI (1):
-│    • OpenAI Ring Speaker to Cost $300 to $400, Priced Above Apple’s HomePod
+│    • Solomon to tackle machine perception
 │  Business (2):
-│    • Options Action: Bullish options moves around SpaceX
-│    • Nvidia’s (NVDA) Alpamayo Launch and the Robotaxi Bet
+│    • 4 AI Stocks Built to Outlast the Hype
+│    • Dell Technologies: Significant Upside Remains, The Bull Case Still Holds
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 136.52 (prev 136.57, -0.0%)
-│    PTC: 72.41 (prev 73.16, -1.0%)
-│    OCTOPUS: 31.85 (prev 31.88, -0.1%)
-│    TRG: 63.29 (prev 62.37, 1.5%)
-│    AVN: 32.93 (prev 32.75, 0.5%)
+│    SYS: 136.80 (prev 136.52, 0.2%)
+│    PTC: 72.50 (prev 72.41, 0.1%)
+│    OCTOPUS: 31.76 (prev 31.85, -0.3%)
+│    TRG: 63.00 (prev 63.29, -0.5%)
+│    AVN: 32.92 (prev 32.93, -0.0%)
 │  Calling Gemini to summarize...
 │  ✓  Content looks populated
 └── Done: M. Hassan
 
 ┌── Ibrahim Malik ───────────────────────────────
-│  After keyword filter : 9 articles
+│  After keyword filter : 10 articles
 │  After AI filter      : 7 articles
-│  Global News (1):
-│    • Exclusive: WFP to extend Palantir contract despite concerns raised in leaked aud
+│  Global News (2):
+│    • Why scientists behind CullBeck startup won't be running the business
+│    • Five priorities outlined for ICT, telecom sectors
 │  Pakistan News (1):
-│    • Pakistan ideal destination for Chinese investment
-│  Technology (3):
-│    • Congress Eyes Boosting Quantum Funds as Global Race Heats Up
-│    • $60b digital economy at risk without action
-│    • Micron’s Memory-Market Paradox: Fully Booked Through 2027, Yet the Stock Keeps S
+│    • How Pakistan-US Agricultural Technology Partnerships Can Transform Modern Farmin
+│  Technology (1):
+│    • This new TV tracking app could do for shows what Letterboxd does for movies
 │  AI (1):
-│    • AI titans to tidy agent frontier with plugin prescription
-│  Business (1):
-│    • Cricut Q2 Earnings Call Highlights
+│    • AI Creates 16 Brand-New Viral Genomes Never Seen in Nature, Scientists Call It a
+│  Business (2):
+│    • Financial Review: Rigetti Computing (NASDAQ:RGTIW) and STMicroelectronics (NYSE:
+│    • '122% negative margin': OpenAI's trillion-dollar IPO to go public soon
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 136.52 (prev 136.57, -0.0%)
-│    PTC: 72.41 (prev 73.16, -1.0%)
-│    OCTOPUS: 31.85 (prev 31.88, -0.1%)
-│    TRG: 63.29 (prev 62.37, 1.5%)
-│    AVN: 32.93 (prev 32.75, 0.5%)
+│    SYS: 136.80 (prev 136.52, 0.2%)
+│    PTC: 72.50 (prev 72.41, 0.1%)
+│    OCTOPUS: 31.76 (prev 31.85, -0.3%)
+│    TRG: 63.00 (prev 63.29, -0.5%)
+│    AVN: 32.92 (prev 32.93, -0.0%)
 │  Calling Gemini to summarize...
 │  ✓  Content looks populated
 └── Done: Ibrahim Malik
@@ -139,14 +135,14 @@ Top sources in pool:
 ====================================================
   SUMMARY
 ====================================================
-  Run time      : 94s
-  Pool size     : 106 unique articles
+  Run time      : 97s
+  Pool size     : 128 unique articles
 
   Per-user results:
-  Haroon Mirza     kw:8 → ai:6  [Global:1 PK:1 Technology:3 Business:1] ⚠️ fallback text detected
-  Zaid Bin Asim    kw:10 → ai:9  [Global:2 PK:1 Technology:2 AI:2 Business:2] ⚠️ fallback text detected
-  M. Hassan        kw:10 → ai:9  [Global:2 PK:1 Technology:3 AI:1 Business:2] ✓
-  Ibrahim Malik    kw:9 → ai:7  [Global:1 PK:1 Technology:3 AI:1 Business:1] ✓
+  Haroon Mirza     kw:9 → ai:6  [Global:1 PK:1 Technology:2 AI:1 Business:1] ✓
+  Zaid Bin Asim    kw:9 → ai:7  [Global:2 Technology:1 AI:2 Business:2] ✓
+  M. Hassan        kw:11 → ai:7  [Global:2 PK:1 Technology:1 AI:1 Business:2] ✓
+  Ibrahim Malik    kw:10 → ai:7  [Global:2 PK:1 Technology:1 AI:1 Business:2] ✓
 
   EMAIL NOT SENT — review the preview file above
   Open data/dry-run-preview.html in a browser to
