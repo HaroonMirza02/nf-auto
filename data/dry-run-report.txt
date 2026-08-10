@@ -1,29 +1,29 @@
 ====================================================
   NF AUTO V2 — DRY RUN (no email will be sent)
-  8/10/2026, 2:06:19 PM
+  8/10/2026, 3:32:23 PM
 ====================================================
 
 ── STEP 1: Consolidated pool fetch ──────────────────
 
 
-Pool: 114 unique articles fetched
+Pool: 122 unique articles fetched
 
 Top sources in pool:
-  Reuters: 5
-  Financial Times: 5
-  Ticker Report: 5
-  Bbns: 5
-  Business Recorder: 4
-  Bundle: 4
-  Google News: 4
+  Datadriveninvestor: 10
+  Reuters: 7
+  Financial Times: 6
+  Bundle: 6
+  Google News: 6
+  Yahoo! News: 4
   Bloomberg: 3
-  Zolmax: 3
-  Hellenicshippingnews: 3
+  서울경제: 3
+  Cnbc: 2
+  The Times Of India: 2
 
 ── STEP 2: Pool distribution ────────────────────────
 
   Haroon Mirza: 8 articles after keyword filter
-  Zaid Bin Asim: 10 articles after keyword filter
+  Zaid Bin Asim: 9 articles after keyword filter
   M. Hassan: 9 articles after keyword filter
   Ibrahim Malik: 9 articles after keyword filter
 
@@ -32,48 +32,41 @@ Top sources in pool:
 
 ┌── Haroon Mirza ────────────────────────────────
 │  After keyword filter : 8 articles
-│  After AI filter      : 7 articles
+│  After AI filter      : 3 articles
 │  Global News (1):
-│    • Apple taps Alibaba’s Qwen to boost Macs in China
+│    • Samsung Hits 80% Yield on HBM4, Speeds Up HBM4E Production
 │  Pakistan News (1):
 │    • AI, automation, robotics reshaping economies, societies across the world: Sindh 
-│  Technology (3):
-│    • Embattled hedge fund Situational Awareness invests $400M in chip startup Source 
-│    • MCIT celebrates graduation of 10 firms of Scale Now programme
-│    • Meet The Activists Opposing Virginia Data Centers. Some Have Marxist Ties.
-│  AI (1):
-│    • Meta says its AI model hacked another company, adding to worries about bots goin
-│  Business (1):
-│    • Amrize Q2 Earnings Call Highlights
+│  Technology (1):
+│    • Moonshot AI Overhauls Structure Under Beijing Pressure, Delaying Hong Kong IPO
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 135.37 (prev 136.52, -0.8%)
-│    NETSOL: 125.50 (prev 126.98, -1.2%)
+│    SYS: 135.77 (prev 136.52, -0.5%)
+│    NETSOL: 125.00 (prev 126.98, -1.6%)
 │    ICI: 591.53 (prev 596.48, -0.8%)
-│    LUCK: 454.80 (prev 458.75, -0.9%)
-│    OGDC: 321.98 (prev 319.19, 0.9%)
+│    LUCK: 454.35 (prev 458.75, -1.0%)
+│    OGDC: 323.89 (prev 319.19, 1.5%)
 │  Calling Gemini to summarize...
 │  ✓  Content looks populated
 └── Done: Haroon Mirza
 
 ┌── Zaid Bin Asim ───────────────────────────────
-│  After keyword filter : 10 articles
+│  After keyword filter : 9 articles
 │  After AI filter      : 6 articles
 │  Global News (2):
-│    • Between Washington and Beijing, Türkiye must chart its AI course
-│    • Eightcap uses AI to scale compliance across global markets
-│  Technology (1):
-│    • China Bets on AI Stocks as It Races Against US for Chip, Tech Dominance
-│  AI (2):
-│    • AI is becoming a financial adviser for younger Americans
-│    • BofA, JPMorgan, Oppenheimer Name Their 3 Favorite AI Stocks, One Has a $255 Targ
-│  Business (1):
-│    • Willdan Group Q2 Earnings Call Highlights
+│    • India among top nations in quantum technology, says science minister Jitendra Si
+│    • UAE launches agentic AI project to transform 50% of govt operations
+│  Technology (2):
+│    • V2X Technology Gets a 5G Cellphone Network Solution
+│    • Starlink Direct-to-Cell Service To Compete with Standard Smartphones by 2027
+│  Business (2):
+│    • 1 Nasdaq 100 Stock for Long-Term Investors and 2 We Question
+│    • Malaysia positions itself as Korea's long-term tech partner
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 135.37 (prev 136.52, -0.8%)
-│    SHSML: 381.96 (prev 381.96, 0.0%)
-│    NETSOL: 125.50 (prev 126.98, -1.2%)
-│    OGDC: 321.98 (prev 319.19, 0.9%)
-│    PSO: 352.39 (prev 350.67, 0.5%)
+│    SYS: 135.77 (prev 136.52, -0.5%)
+│    SHSML: 375.93 (prev 381.96, -1.6%)
+│    NETSOL: 125.00 (prev 126.98, -1.6%)
+│    OGDC: 323.89 (prev 319.19, 1.5%)
+│    PSO: 353.22 (prev 350.67, 0.7%)
 │  Calling Gemini to summarize...
 │  ✓  Content looks populated
 └── Done: Zaid Bin Asim
@@ -81,47 +74,51 @@ Top sources in pool:
 ┌── M. Hassan ───────────────────────────────────
 │  After keyword filter : 9 articles
 │  After AI filter      : 7 articles
-│  Global News (2):
-│    • Chinese tech firms target Dubai for global expansion as flying cars, drone deliv
-│    • Samsung wants to bring a floating data center to Texas — huge waterborne facilit
+│  Global News (1):
+│    • Fintech After GameStop: How Will the Robinhood Trading Debacle Affect Regulation
 │  Pakistan News (1):
 │    • CM Murad lauds GU Tech’s innovation-driven education, urges youth to lead Pakist
-│  Technology (2):
-│    • A hair-thin gold crystal could lift quantum tech out of the deep freeze
-│    • Alphabet's Cloud Computing Business Just Posted 82% Revenue Growth. Next Quarter
+│  Technology (3):
+│    • Opinion | China Presses a Weakness in America’s Tech Policy
+│    • MCIT celebrates graduation of 10 firms of Scale Now programme
+│    • Atlassian just flipped Wall Street’s AI fear on its head
 │  AI (1):
-│    • Generative AI has changed mathematics forever. Where to from here?
+│    • Malaysia positions itself as Korea's long-term tech partner
 │  Business (1):
-│    • Arista Networks vs. Arm: Comparing Revenue Growth Trajectories for These Artific
+│    • Meet The 3 Fintech Stocks Poised for Growth in Wall Street’s Relief Rally — Data
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 135.37 (prev 136.52, -0.8%)
-│    PTC: 72.25 (prev 72.41, -0.2%)
-│    OCTOPUS: 32.00 (prev 31.85, 0.5%)
-│    TRG: 61.35 (prev 63.29, -3.1%)
-│    AVN: 32.54 (prev 32.93, -1.2%)
+│    SYS: 135.77 (prev 136.52, -0.5%)
+│    PTC: 72.50 (prev 72.41, 0.1%)
+│    OCTOPUS: 32.30 (prev 31.85, 1.4%)
+│    TRG: 61.60 (prev 63.29, -2.7%)
+│    AVN: 32.80 (prev 32.93, -0.4%)
 │  Calling Gemini to summarize...
 │  ✓  Content looks populated
 └── Done: M. Hassan
 
 ┌── Ibrahim Malik ───────────────────────────────
 │  After keyword filter : 9 articles
-│  After AI filter      : 6 articles
-│  Global News (1):
-│    • Marcos calls for Asean unity amid int’l crises
+│  After AI filter      : 9 articles
+│  Global News (2):
+│    • Between Washington and Beijing, Türkiye must chart its AI course
+│    • AI is powering US GDP: Why India cannot afford to be left behind
 │  Pakistan News (1):
 │    • How Pakistan-US Agricultural Technology Partnerships Can Transform Modern Farmin
 │  Technology (3):
-│    • AI is helping empower women entrepreneurs
-│    • Google Pixel 11 Must Fix Hardware Flaws and Reliability Issues to Succeed
-│    • Opinion: ChatGPT is taking away uncertainty — why that matters
+│    • MCIT celebrates graduation of 10 tech firms from third cohort of Scale Now
+│    • Agentic AI and big data: what your platform needs before agents are useful
+│    • Apple CEO Tim Cook Just Passed His Successor a Mess
 │  AI (1):
-│    • Article on Keeping ahead of agentic AI b...
+│    • Malaysia positions itself as Korea's long-term tech partner
+│  Business (2):
+│    • US stock rally faces inflation test as investors weigh Fed rate path
+│    • Arista Networks vs. Arm: Comparing Revenue Growth Trajectories for These Artific
 │  PSX data source      : dps.psx.com.pk (live with static fallback)
-│    SYS: 135.37 (prev 136.52, -0.8%)
-│    PTC: 72.25 (prev 72.41, -0.2%)
-│    OCTOPUS: 32.00 (prev 31.85, 0.5%)
-│    TRG: 61.35 (prev 63.29, -3.1%)
-│    AVN: 32.54 (prev 32.93, -1.2%)
+│    SYS: 135.77 (prev 136.52, -0.5%)
+│    PTC: 72.50 (prev 72.41, 0.1%)
+│    OCTOPUS: 32.30 (prev 31.85, 1.4%)
+│    TRG: 61.60 (prev 63.29, -2.7%)
+│    AVN: 32.80 (prev 32.93, -0.4%)
 │  Calling Gemini to summarize...
 │  ✓  Content looks populated
 └── Done: Ibrahim Malik
@@ -133,14 +130,14 @@ Top sources in pool:
 ====================================================
   SUMMARY
 ====================================================
-  Run time      : 91s
-  Pool size     : 114 unique articles
+  Run time      : 88s
+  Pool size     : 122 unique articles
 
   Per-user results:
-  Haroon Mirza     kw:8 → ai:7  [Global:1 PK:1 Technology:3 AI:1 Business:1] ✓
-  Zaid Bin Asim    kw:10 → ai:6  [Global:2 Technology:1 AI:2 Business:1] ✓
-  M. Hassan        kw:9 → ai:7  [Global:2 PK:1 Technology:2 AI:1 Business:1] ✓
-  Ibrahim Malik    kw:9 → ai:6  [Global:1 PK:1 Technology:3 AI:1] ✓
+  Haroon Mirza     kw:8 → ai:3  [Global:1 PK:1 Technology:1] ✓
+  Zaid Bin Asim    kw:9 → ai:6  [Global:2 Technology:2 Business:2] ✓
+  M. Hassan        kw:9 → ai:7  [Global:1 PK:1 Technology:3 AI:1 Business:1] ✓
+  Ibrahim Malik    kw:9 → ai:9  [Global:2 PK:1 Technology:3 AI:1 Business:2] ✓
 
   EMAIL NOT SENT — review the preview file above
   Open data/dry-run-preview.html in a browser to

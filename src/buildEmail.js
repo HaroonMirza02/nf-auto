@@ -73,22 +73,42 @@ function buildEmail(userSections, date) {
       </div>
     </div>
     `;
-  }).join('\n');
+  }).join('');
 
   return `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <title>TechNews Daily Digest</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;700&display=swap');
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
     body { background-color: #f7f7f7; margin: 0; padding: 0; font-family: 'DM Sans', -apple-system, sans-serif; }
-    .ai-content h3 { margin: 30px 0 15px; font-size: 16px; font-weight: 700; text-transform: uppercase; color: #111111; letter-spacing: 1px; }
-    .ai-content ul { padding-left: 18px; margin-bottom: 0; }
-    .ai-content li { margin-bottom: 16px; font-size: 14px; line-height: 1.6; color: #111111; }
+    .ai-content h3 { margin: 35px 0 18px; font-size: 16px; font-weight: 700; text-transform: uppercase; color: #111111; letter-spacing: 1px; border-bottom: 1px solid #eeeeee; padding-bottom: 8px; }
+    .ai-content ul { padding-left: 18px; margin-bottom: 0; margin-top: 10px; }
+    .ai-content li { margin-bottom: 32px; font-size: 14px; line-height: 1.6; color: #111111; }
+    .ai-content li:last-child { margin-bottom: 16px; }
     .ai-content b, .ai-content strong { font-weight: 700; color: #000000; }
     .ai-content a { color: #111111; font-weight: 700; text-decoration: underline; }
+
+    /* Default Light Mode Logo */
+    .light-logo { display: block !important; }
+    .dark-logo { display: none !important; mso-hide: all; }
+
+    /* Dark Mode Media Query for Gmail, Apple Mail, Outlook */
+    @media (prefers-color-scheme: dark) {
+      .light-logo { display: none !important; }
+      .dark-logo { display: block !important; margin: 0 auto !important; }
+    }
+    /* Gmail Dark Mode Data Attribute Targeting */
+    [data-ogsc] .light-logo { display: none !important; }
+    [data-ogsc] .dark-logo { display: block !important; margin: 0 auto !important; }
   </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #fafafa;">
@@ -98,7 +118,10 @@ function buildEmail(userSections, date) {
     <!-- Branding Header -->
     <div style="padding: 10px 0 35px; text-align: center;">
        <div style="text-align: center; margin-bottom: 16px;">
-         <img src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="160" style="display: block; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+         <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="160" style="display: block; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+         <!--[if !mso]><!-->
+         <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.webp" alt="Vision Logo" width="160" style="display: none; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+         <!--<![endif]-->
        </div>
        <div style="font-size: 14px; font-weight: 700; letter-spacing: 5px; color: #111111; text-transform: uppercase; margin-bottom: 6px;">TECHNEWS DAILY DIGEST</div>
        <div style="font-size: 11px; font-weight: 700; color: #111111; letter-spacing: 1.5px; text-transform: uppercase;">${date}</div>
@@ -117,7 +140,10 @@ function buildEmail(userSections, date) {
       <div style="font-size: 11px; font-weight: 700; color: #111111; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">TECHNEWS · AUTOMATED EXECUTIVE BRIEFING</div>
       <div style="font-size: 11px; font-weight: 600; color: #111111; margin-bottom: 16px; line-height: 1.5;">Curated Daily Market &amp; Tech Intelligence Engine</div>
       <div style="text-align: center; margin-top: 16px;">
-        <img src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="120" style="display: block; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+        <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="120" style="display: block; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+        <!--[if !mso]><!-->
+        <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.webp" alt="Vision Logo" width="120" style="display: none; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+        <!--<![endif]-->
       </div>
     </div>
 
