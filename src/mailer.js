@@ -35,7 +35,7 @@ async function sendDigest(emailHtml, recipientOverride, dateOverride) {
     const mailOptions = {
         from: `"NewsFlash Auto" <${SMTP_USER}>`,
         to: recipient,
-        subject: `⚡ NewsFlash Auto — [${displayDate}]`,
+        subject: `NewsFlash Auto — Daily Tech Digest | ${displayDate}`,
         html: emailHtml
     };
 

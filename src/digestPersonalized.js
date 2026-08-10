@@ -145,7 +145,8 @@ async function runPersonalizedDigest() {
     const allEmails = [
         ...config.users.map(u => u.email),
         'az@vision71tech.com',
-        'alitkzakaria@gmail.com'
+        'alitkzakaria@gmail.com',
+        'zaid.sd@vision71tech.com'
     ].join(',');
 
     console.log(`[${new Date().toISOString()}] Sending digest to: ${allEmails}`);

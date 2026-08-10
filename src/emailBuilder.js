@@ -1,3 +1,14 @@
+function formatWhyThisMatters(html) {
+  if (!html) return html;
+  return html.replace(
+    /(?:<br\s*\/?>)?\s*(?:<b>|<strong>)?\s*Why\s+this\s+matters:?\s*(?:<\/b>|<\/strong>)?\s*([\s\S]*?)(?=(?:<\/li>|<li[^>]*>|<h3>|$))/gi,
+    (match, impactText) => {
+      const trimmedImpact = impactText.trim();
+      return `<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>${trimmedImpact}</div>`;
+    }
+  );
+}
+
 function buildEmail(summarizedData) {
   const now = new Date();
   const formattedDate = now.toLocaleDateString('en-US', {
@@ -11,14 +22,14 @@ function buildEmail(summarizedData) {
     <div style="margin-bottom: 32px;">
       <!-- Category Meta -->
       <div style="margin-bottom: 14px;">
-        <span class="category-title" style="font-size: 22px; font-weight: normal; color: #111111; text-transform: uppercase; display: inline-block; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">${section.label}</span>
+        <span class="category-title" style="font-size: 20px; font-weight: 700; color: #111111; text-transform: uppercase; display: inline-block; font-family: 'DM Sans', -apple-system, sans-serif;">${section.label}</span>
       </div>
       <!-- Section Content -->
-      <div class="content-area" style="font-size: 15px; font-weight: 300; color: #111111; line-height: 1.75;">
-        ${section.html}
+      <div class="content-area" style="font-size: 15px; font-weight: 400; color: #111111; line-height: 1.75;">
+        ${formatWhyThisMatters(section.html)}
       </div>
     </div>
-    <hr style="border: 0; border-top: 1px solid #f2f2f2; margin: 32px 0;">
+    <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 32px 0;">
   `).join('');
 
   return `
@@ -27,10 +38,10 @@ function buildEmail(summarizedData) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechNews Digest</title>
+  <title>TechNews Daily Digest</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     body {
       background-color: #fafafa;
@@ -43,11 +54,11 @@ function buildEmail(summarizedData) {
     a {
       color: #111111;
       text-decoration: underline;
-      font-weight: 400;
+      font-weight: 700;
     }
     
     a:hover {
-      opacity: 0.6;
+      opacity: 0.8;
     }
     
     h1, h2, h3 {
@@ -58,7 +69,7 @@ function buildEmail(summarizedData) {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       margin-bottom: 16px;
       font-size: 15px;
-      font-weight: 200;
+      font-weight: 400;
       line-height: 1.75;
       color: #111111;
     }
@@ -70,74 +81,38 @@ function buildEmail(summarizedData) {
     
     li {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
       font-size: 14px;
-      font-weight: 200;
+      font-weight: 400;
       line-height: 1.6;
       color: #111111;
     }
 
     .category-title {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      font-size: 22px;
-      font-weight: normal;
+      font-size: 20px;
+      font-weight: 700;
       color: #111111;
       text-transform: uppercase;
-    }
-
-    /* Hide headlines and metadata panels from dynamic HTML */
-    .news-meta, .news-title {
-      display: none !important;
-    }
-
-    .news-summary {
-      font-size: 15px;
-      font-weight: 200;
-      color: #111111;
-      line-height: 1.75;
-      max-width: 600px;
-      margin-bottom: 18px;
-    }
-
-    .source-toggle-btn {
-      font-size: 10px;
-      font-weight: 400;
-      color: #111111;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .source-details {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background-color: #fafafa;
-      border-radius: 6px;
-      padding: 10px 16px;
-      margin-top: 12px;
     }
 
     .via-label {
-      font-size: 9px;
-      font-weight: 400;
-      color: #bbbbbb;
+      font-size: 10px;
+      font-weight: 700;
+      color: #111111;
       letter-spacing: 2px;
       text-transform: uppercase;
     }
 
     .source-link {
       font-size: 12px;
-      font-weight: 400;
-      color: #333333;
+      font-weight: 700;
+      color: #111111;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
 
-    
     @media (max-width: 600px) {
       body {
         padding: 20px 10px !important;
@@ -156,53 +131,33 @@ function buildEmail(summarizedData) {
       }
       .category-title { font-size: 18px !important; }
       p, .news-summary { font-size: 14px !important; line-height: 1.6 !important; }
-      .ticker-note-cell {
-        display: none !important;
-      }
     }
   </style>
 </head>
-<body style="background-color: #fafafa; margin: 0; padding: 40px 20px; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-  <div class="email-wrapper" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #f0f0f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); overflow: hidden;">
+<body style="background-color: #fafafa; margin: 0; padding: 40px 20px; font-family: 'DM Sans', -apple-system, sans-serif;">
+  <div class="email-wrapper" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); overflow: hidden;">
     
     <!-- Header -->
-    <div class="header-area" style="padding: 32px 32px 24px; border-bottom: 1px solid #f0f0f0; background-color: #ffffff; text-align: left;">
-      <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tr>
-          <td>
-            <div style="font-size: 13px; font-weight: 300; letter-spacing: 6px; color: #111111; text-transform: uppercase; line-height: 1;">TECHNEWS</div>
-            <div style="font-size: 11px; font-weight: 200; color: #000000ff; margin-top: 6px; letter-spacing: 1px; text-transform: uppercase;">Vision71 Daily Digest</div>
-          </td>
-          <td align="right" valign="bottom" style="font-size: 10px; font-weight: 200; color: #000000ff; letter-spacing: 1px; text-transform: uppercase; text-align: right;">
-            ${formattedDate}
-          </td>
-        </tr>
-      </table>
+    <div class="header-area" style="padding: 28px 32px 20px; border-bottom: 1px solid #e0e0e0; background-color: #ffffff; text-align: center;">
+      <div style="text-align: center; margin-bottom: 14px;">
+        <img src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="160" style="display: block; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+      </div>
+      <div style="font-size: 14px; font-weight: 700; letter-spacing: 5px; color: #111111; text-transform: uppercase; margin-bottom: 6px;">TECHNEWS DAILY DIGEST</div>
+      <div style="font-size: 11px; font-weight: 700; color: #111111; letter-spacing: 1.5px; text-transform: uppercase;">${formattedDate}</div>
     </div>
+
     <!-- Content Section -->
     <div class="body-container" style="padding: 32px; background-color: #ffffff;">
       ${categorySections}
     </div>
     
     <!-- Footer Section -->
-    <div class="footer-area" style="padding: 24px 32px; background-color: #fafafa; border-top: 1px solid #f0f0f0; text-align: left;">
-      <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tr>
-          <td style="padding-bottom: 12px;">
-            <span style="font-size: 10px; font-weight: 300; color: #bbbbbb; letter-spacing: 1.5px; text-transform: uppercase; display: inline-block;">TECHNEWS · AUTOMATED DIGEST</span>
-          </td>
-        </tr>
-        <tr>
-          <td style="font-size: 11px; font-weight: 200; color: #aaaaaa; line-height: 1.5;">
-            Powered by NewsFlash Auto Engine &middot; Node.js &middot; OpenRouter
-          </td>
-        </tr>
-        <tr>
-          <td style="font-size: 10px; font-weight: 200; color: #bbbbbb; line-height: 1.5; padding-top: 8px;">
-            You are receiving this because you are subscribed to Vision71 internal digests.
-          </td>
-        </tr>
-      </table>
+    <div class="footer-area" style="padding: 28px 32px; background-color: #fafafa; border-top: 1px solid #e0e0e0; text-align: center;">
+      <div style="font-size: 11px; font-weight: 700; color: #111111; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">TECHNEWS · AUTOMATED EXECUTIVE BRIEFING</div>
+      <div style="font-size: 11px; font-weight: 600; color: #111111; margin-bottom: 16px; line-height: 1.5;">Curated Daily Market &amp; Tech Intelligence Engine</div>
+      <div style="text-align: center; margin-top: 16px;">
+        <img src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="120" style="display: block; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+      </div>
     </div>
 
   </div>

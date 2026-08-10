@@ -49,8 +49,8 @@ STRICT CONTENT RULES:
   If a category has no articles, it simply does not appear in today's digest.
 
 STRICT WRITING STYLE:
-- News Item: MAX 1-2 lines summary. BOLD 2-3 key words using <b>HTML</b>.
-- Impact line: New line starting with "<b>Why this matters:</b>" — MAX 1 line, NOT bold, specific to how it affects a technology company.
+- News Item: EXACTLY 1 concise summary sentence (MAX 15-20 words). BOLD 2-3 key words using <b>HTML</b>.
+- Impact line: MUST start on a NEW LINE / PARAGRAPH starting with "<b>Why this matters:</b>" — EXACTLY 1 brief sentence (MAX 12-15 words), specific to technology impact.
 - At the end of each "Why this matters" line, write: [READ_MORE:N] where N is the Article number.
 
 SOURCES: ${user.sources.join(', ')}
