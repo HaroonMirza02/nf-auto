@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-07T05:53:20.650Z",
+  "lastUpdated": "2026-08-12T04:40:14.820Z",
   "users": [
     {
       "id": "haroon",
@@ -8,7 +8,8 @@
       "sources": [
         "reuters",
         "techcrunch",
-        "dawn"
+        "dawn",
+        "venturebeat"
       ],
       "psx_stocks": [
         {
