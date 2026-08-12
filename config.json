@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-12T04:40:15.952Z",
+  "lastUpdated": "2026-08-12T04:40:36.304Z",
   "users": [
     {
       "id": "haroon",
@@ -141,7 +141,8 @@
       "sources": [
         "brecorder",
         "reuters",
-        "wired"
+        "wired",
+        "fortune"
       ],
       "psx_stocks": [
         {
