@@ -101,26 +101,28 @@ function buildEmail(userSections, date) {
     .light-logo { display: block !important; }
     .dark-logo { display: none !important; mso-hide: all; }
 
-    /* Dark Mode Media Query for Gmail, Apple Mail, Outlook */
+    /* Dark Mode Media Query for Apple Mail, Outlook, Thunderbird */
     @media (prefers-color-scheme: dark) {
       .light-logo { display: none !important; }
       .dark-logo { display: block !important; margin: 0 auto !important; }
     }
-    /* Gmail Dark Mode Data Attribute Targeting */
+    /* Gmail Dark Mode Specific Selectors */
     [data-ogsc] .light-logo { display: none !important; }
     [data-ogsc] .dark-logo { display: block !important; margin: 0 auto !important; }
+    u + .body .light-logo { display: none !important; }
+    u + .body .dark-logo { display: block !important; margin: 0 auto !important; }
   </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #fafafa;">
+<body class="body" style="margin: 0; padding: 0; background-color: #fafafa;">
   <a name="top"></a>
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     
     <!-- Branding Header -->
     <div style="padding: 10px 0 35px; text-align: center;">
        <div style="text-align: center; margin-bottom: 16px;">
-         <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="160" style="display: block; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+         <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="160" style="display: block; margin: 0 auto; border: 0; max-width: 180px; height: auto; filter: drop-shadow(0px 0px 1px #ffffff) drop-shadow(0px 0px 2px #ffffff);" />
          <!--[if !mso]><!-->
-         <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.webp" alt="Vision Logo" width="160" style="display: none; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+         <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.png" alt="Vision Logo" width="160" style="display: none; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
          <!--<![endif]-->
        </div>
        <div style="font-size: 14px; font-weight: 700; letter-spacing: 5px; color: #111111; text-transform: uppercase; margin-bottom: 6px;">TECHNEWS DAILY DIGEST</div>
@@ -140,9 +142,9 @@ function buildEmail(userSections, date) {
       <div style="font-size: 11px; font-weight: 700; color: #111111; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">TECHNEWS · AUTOMATED EXECUTIVE BRIEFING</div>
       <div style="font-size: 11px; font-weight: 600; color: #111111; margin-bottom: 16px; line-height: 1.5;">Curated Daily Market &amp; Tech Intelligence Engine</div>
       <div style="text-align: center; margin-top: 16px;">
-        <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="120" style="display: block; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+        <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="120" style="display: block; margin: 0 auto; border: 0; max-width: 140px; height: auto; filter: drop-shadow(0px 0px 1px #ffffff) drop-shadow(0px 0px 2px #ffffff);" />
         <!--[if !mso]><!-->
-        <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.webp" alt="Vision Logo" width="120" style="display: none; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+        <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.png" alt="Vision Logo" width="120" style="display: none; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
         <!--<![endif]-->
       </div>
     </div>

@@ -23,26 +23,28 @@
     .light-logo { display: block !important; }
     .dark-logo { display: none !important; mso-hide: all; }
 
-    /* Dark Mode Media Query for Gmail, Apple Mail, Outlook */
+    /* Dark Mode Media Query for Apple Mail, Outlook, Thunderbird */
     @media (prefers-color-scheme: dark) {
       .light-logo { display: none !important; }
       .dark-logo { display: block !important; margin: 0 auto !important; }
     }
-    /* Gmail Dark Mode Data Attribute Targeting */
+    /* Gmail Dark Mode Specific Selectors */
     [data-ogsc] .light-logo { display: none !important; }
     [data-ogsc] .dark-logo { display: block !important; margin: 0 auto !important; }
+    u + .body .light-logo { display: none !important; }
+    u + .body .dark-logo { display: block !important; margin: 0 auto !important; }
   </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #fafafa;">
+<body class="body" style="margin: 0; padding: 0; background-color: #fafafa;">
   <a name="top"></a>
   <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
     
     <!-- Branding Header -->
     <div style="padding: 10px 0 35px; text-align: center;">
        <div style="text-align: center; margin-bottom: 16px;">
-         <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="160" style="display: block; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+         <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="160" style="display: block; margin: 0 auto; border: 0; max-width: 180px; height: auto; filter: drop-shadow(0px 0px 1px #ffffff) drop-shadow(0px 0px 2px #ffffff);" />
          <!--[if !mso]><!-->
-         <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.webp" alt="Vision Logo" width="160" style="display: none; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
+         <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.png" alt="Vision Logo" width="160" style="display: none; margin: 0 auto; border: 0; max-width: 180px; height: auto;" />
          <!--<![endif]-->
        </div>
        <div style="font-size: 14px; font-weight: 700; letter-spacing: 5px; color: #111111; text-transform: uppercase; margin-bottom: 6px;">TECHNEWS DAILY DIGEST</div>
@@ -78,7 +80,7 @@
       <!-- ID Header -->
       <div style="margin-bottom: 25px;">
         <div style="font-size: 20px; font-weight: 700; color: #111111; letter-spacing: -0.5px; text-transform: uppercase;">Haroon Mirza</div>
-        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">Reuters, TechCrunch, Dawn</div>
+        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">REUTERS, TECHCRUNCH, DAWN</div>
       </div>
 
       <!-- Markets -->
@@ -89,15 +91,9 @@
         <div style="margin-bottom: 14px;">
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🇵🇰 PAKISTAN MARKETS (PSX)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">135.77</span> <span style="color:#b81c1c;font-weight:700;">(-0.5%)</span>
+    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">148.25</span> <span style="color:#1a7a3a;font-weight:700;">(+1.2%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">NETSOL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">125.00</span> <span style="color:#b81c1c;font-weight:700;">(-1.6%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">ICI</span> <span style="color:#111111;font-weight:600;margin:0 2px;">591.53</span> <span style="color:#b81c1c;font-weight:700;">(-0.8%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">LUCK</span> <span style="color:#111111;font-weight:600;margin:0 2px;">454.35</span> <span style="color:#b81c1c;font-weight:700;">(-1.0%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">OGDC</span> <span style="color:#111111;font-weight:600;margin:0 2px;">323.89</span> <span style="color:#1a7a3a;font-weight:700;">(+1.5%)</span>
+    <span style="font-weight:700;color:#111111;">NETSOL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">133.40</span> <span style="color:#b81c1c;font-weight:700;">(-0.8%)</span>
   </span></div>
         </div>
 
@@ -105,38 +101,16 @@
         <div>
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🌐 GLOBAL MARKETS (US)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">AMZN</span> <span style="color:#111111;font-weight:600;margin:0 2px;">274.48</span> <span style="color:#1a7a3a;font-weight:700;">(+0.8%)</span>
+    <span style="font-weight:700;color:#111111;">AMZN</span> <span style="color:#111111;font-weight:600;margin:0 2px;">180.50</span> <span style="color:#1a7a3a;font-weight:700;">(+0.5%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">GOOG</span> <span style="color:#111111;font-weight:600;margin:0 2px;">353.47</span> <span style="color:#b81c1c;font-weight:700;">(-0.9%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">NVDA</span> <span style="color:#111111;font-weight:600;margin:0 2px;">223.96</span> <span style="color:#1a7a3a;font-weight:700;">(+2.3%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">META</span> <span style="color:#111111;font-weight:600;margin:0 2px;">592.10</span> <span style="color:#1a7a3a;font-weight:700;">(+0.4%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">MSFT</span> <span style="color:#111111;font-weight:600;margin:0 2px;">499.99</span> <span style="color:#1a7a3a;font-weight:700;">(+0.0%)</span>
+    <span style="font-weight:700;color:#111111;">GOOG</span> <span style="color:#111111;font-weight:600;margin:0 2px;">175.20</span> <span style="color:#b81c1c;font-weight:700;">(-0.2%)</span>
   </span></div>
         </div>
       </div>
 
       <!-- Analyst Reports -->
       <div class="ai-content" style="font-size: 15px; font-weight: 400; color: #111111; line-height: 1.7; font-family: 'DM Sans', sans-serif;">
-        <h3>Global News</h3>
-<ul>
-<li>Samsung reaches an 80% <b>yield rate</b> for its <b>HBM4 chips</b>, accelerating its lead in memory production.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Improved yields strengthen market competition for high-end <b>AI hardware</b> components. <a href="https://en.sedaily.com/finance/2026/08/09/samsung-hits-80-percent-yield-on-hbm4-speeds-up-hbm4e" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Pakistan News</h3>
-<ul>
-<li>Sindh Chief Minister highlights <b>automation</b> and <b>robotics</b> as essential drivers for Pakistan's future economic development.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Policy focus on applied <b>innovation</b> signals potential growth in local technical skill development. <a href="https://www.nation.com.pk/09-Aug-2026/ai-automation-robotics-reshaping-economies-societies-across-world-sindh-cm" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Technology</h3>
-<ul>
-<li>Chinese startup Moonshot AI is restructuring its <b>corporate entity</b> following regulatory pressure, stalling <b>IPO plans</b>.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Regulatory interference continues to dictate <b>capital market</b> strategies for major tech firms. <a href="https://en.sedaily.com/international/2026/08/09/moonshot-ai-overhauls-structure-under-beijing-pressure" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
+        <h3>Pakistan News</h3><ul><li>Sindh CM Murad Ali Shah emphasized <b>innovation</b> in robotics and AI.<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Local government support for emerging tech education is critical for developing a scalable talent pipeline. <a href="#">Read more ↗</a></div></li></ul><h3>Technology</h3><ul><li>Zoox prepares for autonomous vehicle <b>AI integration</b>.<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Shift in logistics and mobility models. <a href="#">Read more ↗</a></div></li></ul>
       </div>
 
       <div style="margin-top: 30px; text-align: center;">
@@ -150,7 +124,7 @@
       <!-- ID Header -->
       <div style="margin-bottom: 25px;">
         <div style="font-size: 20px; font-weight: 700; color: #111111; letter-spacing: -0.5px; text-transform: uppercase;">Zaid Bin Asim</div>
-        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">Dawn, Bloomberg, The Verge</div>
+        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">DAWN, BLOOMBERG, THE VERGE</div>
       </div>
 
       <!-- Markets -->
@@ -161,15 +135,9 @@
         <div style="margin-bottom: 14px;">
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🇵🇰 PAKISTAN MARKETS (PSX)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">135.77</span> <span style="color:#b81c1c;font-weight:700;">(-0.5%)</span>
+    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">148.25</span> <span style="color:#1a7a3a;font-weight:700;">(+1.2%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">SHSML</span> <span style="color:#111111;font-weight:600;margin:0 2px;">375.93</span> <span style="color:#b81c1c;font-weight:700;">(-1.6%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">NETSOL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">125.00</span> <span style="color:#b81c1c;font-weight:700;">(-1.6%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">OGDC</span> <span style="color:#111111;font-weight:600;margin:0 2px;">323.89</span> <span style="color:#1a7a3a;font-weight:700;">(+1.5%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">PSO</span> <span style="color:#111111;font-weight:600;margin:0 2px;">353.22</span> <span style="color:#1a7a3a;font-weight:700;">(+0.7%)</span>
+    <span style="font-weight:700;color:#111111;">SHSML</span> <span style="color:#111111;font-weight:600;margin:0 2px;">394.24</span> <span style="color:#1a7a3a;font-weight:700;">(+4.8%)</span>
   </span></div>
         </div>
 
@@ -177,47 +145,16 @@
         <div>
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🌐 GLOBAL MARKETS (US)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">AAPL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">313.33</span> <span style="color:#1a7a3a;font-weight:700;">(+0.3%)</span>
+    <span style="font-weight:700;color:#111111;">AAPL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">224.23</span> <span style="color:#1a7a3a;font-weight:700;">(+1.1%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">MSFT</span> <span style="color:#111111;font-weight:600;margin:0 2px;">499.99</span> <span style="color:#1a7a3a;font-weight:700;">(+0.0%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">CRM</span> <span style="color:#111111;font-weight:600;margin:0 2px;">192.74</span> <span style="color:#1a7a3a;font-weight:700;">(+3.2%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">TSLA</span> <span style="color:#111111;font-weight:600;margin:0 2px;">328.58</span> <span style="color:#1a7a3a;font-weight:700;">(+2.8%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">GOOGL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">354.30</span> <span style="color:#b81c1c;font-weight:700;">(-1.0%)</span>
+    <span style="font-weight:700;color:#111111;">TSLA</span> <span style="color:#111111;font-weight:600;margin:0 2px;">210.15</span> <span style="color:#b81c1c;font-weight:700;">(-1.5%)</span>
   </span></div>
         </div>
       </div>
 
       <!-- Analyst Reports -->
       <div class="ai-content" style="font-size: 15px; font-weight: 400; color: #111111; line-height: 1.7; font-family: 'DM Sans', sans-serif;">
-        <h3>Global News</h3>
-
-<ul>
-<li>India claims parity with global leaders in <b>quantum technology</b> and advanced manufacturing capabilities.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Signaling India's rapid ascension as a key player in high-tech global infrastructure. <a href="https://timesofindia.indiatimes.com/india/india-among-top-nations-in-quantum-technology-says-science-minister-jitendra-singh/articleshow/133076727.cms" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-<li>The UAE has launched an <b>agentic AI</b> initiative to automate 50% of government operations by 2026.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Demonstrates large-scale adoption of autonomous AI agents in public sector administration. <a href="https://newsable.asianetnews.com/world/uae-launches-agentic-ai-project-to-transform-50-of-govt-operations-articleshow-ge9wrub" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Technology</h3>
-
-<ul>
-<li>New <b>5G cellular</b> network solutions are being adapted to facilitate efficient <b>V2X technology</b> communication.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Bridges critical gaps in vehicle-to-everything connectivity using existing telecommunications infrastructure. <a href="https://primanews.org/v2x-technology-gets-a-5g-cellphone-network-solution/" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-<li>SpaceX plans to integrate <b>Starlink</b> direct-to-cell services with standard smartphones by 2027.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Promises global satellite-based connectivity for standard mobile devices, bypassing terrestrial network limitations. <a href="https://www.webpronews.com/starlink-direct-to-cell-service-launches-on-standard-smartphones-in-2025/" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Business</h3>
-
-<ul>
-<li>Investors are critically reassessing <b>Nasdaq 100</b> tech stocks amid rising profitability and operational cost concerns.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Reflects tightening market scrutiny on the growth sustainability of major technology corporations. <a href="https://ca.finance.yahoo.com/news/1-nasdaq-100-stock-long-221322614.html" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-<li>Malaysia is strategically realigning its <b>tech partnership</b> with Korea to capture high-value semiconductor manufacturing.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Highlights shifting regional alliances in the global semiconductor and AI supply chains. <a href="https://www.koreatimes.co.kr/foreignaffairs/20260810/malaysia-positions-itself-as-koreas-long-term-tech-partner" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
+        <h3>Technology</h3><ul><li>Apple expands <b>on-device AI models</b> across developer frameworks.<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Boosts privacy-focused machine learning capabilities for mobile apps. <a href="#">Read more ↗</a></div></li></ul>
       </div>
 
       <div style="margin-top: 30px; text-align: center;">
@@ -231,7 +168,7 @@
       <!-- ID Header -->
       <div style="margin-bottom: 25px;">
         <div style="font-size: 20px; font-weight: 700; color: #111111; letter-spacing: -0.5px; text-transform: uppercase;">M. Hassan</div>
-        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">CNBC, Financial Times, Business Recorder</div>
+        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">CNBC, FT, BRECORDER</div>
       </div>
 
       <!-- Markets -->
@@ -242,15 +179,9 @@
         <div style="margin-bottom: 14px;">
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🇵🇰 PAKISTAN MARKETS (PSX)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">135.77</span> <span style="color:#b81c1c;font-weight:700;">(-0.5%)</span>
+    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">148.25</span> <span style="color:#1a7a3a;font-weight:700;">(+1.2%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">PTC</span> <span style="color:#111111;font-weight:600;margin:0 2px;">72.50</span> <span style="color:#1a7a3a;font-weight:700;">(+0.1%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">OCTOPUS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">32.30</span> <span style="color:#1a7a3a;font-weight:700;">(+1.4%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">TRG</span> <span style="color:#111111;font-weight:600;margin:0 2px;">61.60</span> <span style="color:#b81c1c;font-weight:700;">(-2.7%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">AVN</span> <span style="color:#111111;font-weight:600;margin:0 2px;">32.80</span> <span style="color:#b81c1c;font-weight:700;">(-0.4%)</span>
+    <span style="font-weight:700;color:#111111;">TRG</span> <span style="color:#111111;font-weight:600;margin:0 2px;">66.68</span> <span style="color:#b81c1c;font-weight:700;">(-5.0%)</span>
   </span></div>
         </div>
 
@@ -258,54 +189,16 @@
         <div>
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🌐 GLOBAL MARKETS (US)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">MSFT</span> <span style="color:#111111;font-weight:600;margin:0 2px;">499.99</span> <span style="color:#1a7a3a;font-weight:700;">(+0.0%)</span>
+    <span style="font-weight:700;color:#111111;">MSFT</span> <span style="color:#111111;font-weight:600;margin:0 2px;">425.10</span> <span style="color:#1a7a3a;font-weight:700;">(+0.8%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">TEAM</span> <span style="color:#111111;font-weight:600;margin:0 2px;">149.07</span> <span style="color:#1a7a3a;font-weight:700;">(+35.3%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">AMZN</span> <span style="color:#111111;font-weight:600;margin:0 2px;">274.48</span> <span style="color:#1a7a3a;font-weight:700;">(+0.8%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">CRM</span> <span style="color:#111111;font-weight:600;margin:0 2px;">192.74</span> <span style="color:#1a7a3a;font-weight:700;">(+3.2%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">GOOGL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">354.30</span> <span style="color:#b81c1c;font-weight:700;">(-1.0%)</span>
+    <span style="font-weight:700;color:#111111;">TEAM</span> <span style="color:#111111;font-weight:600;margin:0 2px;">165.40</span> <span style="color:#1a7a3a;font-weight:700;">(+2.1%)</span>
   </span></div>
         </div>
       </div>
 
       <!-- Analyst Reports -->
       <div class="ai-content" style="font-size: 15px; font-weight: 400; color: #111111; line-height: 1.7; font-family: 'DM Sans', sans-serif;">
-        <h3>Global News</h3>
-<ul>
-<li>Regulators are reassessing <b>fintech oversight</b> in the wake of the Robinhood trading volatility and market disruptions.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Increased regulatory scrutiny could significantly alter platform operational requirements and retail trading frameworks. <a href="https://www.datadriveninvestor.com/articles/fintech-after-gamestop-how-will-the-robinhood-trading-debacle-affect-regulation" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Pakistan News</h3>
-<ul>
-<li>Sindh Chief Minister Murad Ali Shah emphasized the importance of <b>innovation-driven education</b> to secure Pakistan’s technological future.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Institutional support for applied learning is critical for developing local tech-sector human capital. <a href="https://www.urdupoint.com/en/pakistan/cm-murad-lauds-gu-techs-innovation-driven-2233737.html" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Technology</h3>
-<ul>
-<li>U.S. <b>semiconductor strategy</b> must evolve to address control over the software languages powering modern chips.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Strategic dominance requires both manufacturing capacity and control over critical digital infrastructure standards. <a href="https://www.wsj.com/opinion/china-presses-a-weakness-in-americas-tech-policy-2391ed0e?mod=rss_worldnews" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-<li>The MCIT graduated ten startups from the <b>Scale Now</b> program to boost regional tech development.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Scaling programs provide essential support for emerging firms to improve regional digital competitiveness. <a href="https://www.gulf-times.com/article/730791/qatar/mcit-celebrates-graduation-of-10-firms-of-scale-now-programme" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-<li>Atlassian’s latest earnings performance challenged <b>bearish sentiments</b> surrounding the long-term profitability of AI software companies.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Strong financial results validate the practical commercial viability of enterprise AI software integration. <a href="https://www.thestreet.com/investing/atlassian-earnings-outpaced-wall-street-estimates-ai-fear" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>AI</h3>
-<ul>
-<li>Malaysia is aggressively targeting <b>strategic partnerships</b> with Korea to develop high-value AI and semiconductor industries.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Cross-border collaborations are accelerating regional AI adoption and industrial high-tech infrastructure growth. <a href="https://www.koreatimes.co.kr/foreignaffairs/20260810/malaysia-positions-itself-as-koreas-long-term-tech-partner" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Business</h3>
-<ul>
-<li>Three <b>fintech stocks</b> are showing strong growth potential amid the current market relief rally.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Investor sentiment in specialized financial technology remains a key indicator for sector health. <a href="https://www.datadriveninvestor.com/articles/meet-the-3-fintech-stocks-poised-for-growth-in-wall-streets-relief-rally" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
+        <h3>Business</h3><ul><li>Enterprise cloud software spending grows by <b>15 percent</b> in Q3.<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Indicates robust corporate IT budget allocation for digital tools. <a href="#">Read more ↗</a></div></li></ul>
       </div>
 
       <div style="margin-top: 30px; text-align: center;">
@@ -319,7 +212,7 @@
       <!-- ID Header -->
       <div style="margin-bottom: 25px;">
         <div style="font-size: 20px; font-weight: 700; color: #111111; letter-spacing: -0.5px; text-transform: uppercase;">Ibrahim Malik</div>
-        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">Business Recorder, Reuters, Wired</div>
+        <div style="font-size: 11px; font-weight: 700; color: #111111; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">BRECORDER, REUTERS, WIRED</div>
       </div>
 
       <!-- Markets -->
@@ -330,15 +223,9 @@
         <div style="margin-bottom: 14px;">
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🇵🇰 PAKISTAN MARKETS (PSX)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">135.77</span> <span style="color:#b81c1c;font-weight:700;">(-0.5%)</span>
+    <span style="font-weight:700;color:#111111;">SYS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">148.25</span> <span style="color:#1a7a3a;font-weight:700;">(+1.2%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">PTC</span> <span style="color:#111111;font-weight:600;margin:0 2px;">72.50</span> <span style="color:#1a7a3a;font-weight:700;">(+0.1%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">OCTOPUS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">32.30</span> <span style="color:#1a7a3a;font-weight:700;">(+1.4%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">TRG</span> <span style="color:#111111;font-weight:600;margin:0 2px;">61.60</span> <span style="color:#b81c1c;font-weight:700;">(-2.7%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">AVN</span> <span style="color:#111111;font-weight:600;margin:0 2px;">32.80</span> <span style="color:#b81c1c;font-weight:700;">(-0.4%)</span>
+    <span style="font-weight:700;color:#111111;">OCTOPUS</span> <span style="color:#111111;font-weight:600;margin:0 2px;">38.26</span> <span style="color:#1a7a3a;font-weight:700;">(+9.6%)</span>
   </span></div>
         </div>
 
@@ -346,54 +233,16 @@
         <div>
           <div style="font-size: 9px; font-weight: 700; color: #555555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;">🌐 GLOBAL MARKETS (US)</div>
           <div><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">AAPL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">313.33</span> <span style="color:#1a7a3a;font-weight:700;">(+0.3%)</span>
+    <span style="font-weight:700;color:#111111;">NVDA</span> <span style="color:#111111;font-weight:600;margin:0 2px;">128.50</span> <span style="color:#1a7a3a;font-weight:700;">(+3.4%)</span>
   </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">MSFT</span> <span style="color:#111111;font-weight:600;margin:0 2px;">499.99</span> <span style="color:#1a7a3a;font-weight:700;">(+0.0%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">NVDA</span> <span style="color:#111111;font-weight:600;margin:0 2px;">223.96</span> <span style="color:#1a7a3a;font-weight:700;">(+2.3%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">GOOGL</span> <span style="color:#111111;font-weight:600;margin:0 2px;">354.30</span> <span style="color:#b81c1c;font-weight:700;">(-1.0%)</span>
-  </span><span style="display:inline-block;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:4px;padding:4px 8px;margin:2px 4px 2px 0;font-size:10px;color:#111111;font-family:'DM Sans',sans-serif;">
-    <span style="font-weight:700;color:#111111;">META</span> <span style="color:#111111;font-weight:600;margin:0 2px;">592.10</span> <span style="color:#1a7a3a;font-weight:700;">(+0.4%)</span>
+    <span style="font-weight:700;color:#111111;">META</span> <span style="color:#111111;font-weight:600;margin:0 2px;">512.30</span> <span style="color:#1a7a3a;font-weight:700;">(+1.2%)</span>
   </span></div>
         </div>
       </div>
 
       <!-- Analyst Reports -->
       <div class="ai-content" style="font-size: 15px; font-weight: 400; color: #111111; line-height: 1.7; font-family: 'DM Sans', sans-serif;">
-        <h3>Global News</h3>
-<ul>
-<li>Türkiye must navigate <b>U.S.-China</b> rivalry as global focus shifts toward <b>AI supremacy</b> and Pacific tech leadership.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Middle powers must align tech strategies amidst deepening global protectionist policies. <a href="https://www.dailysabah.com/opinion/op-ed/between-washington-and-beijing-turkiye-must-chart-its-ai-course" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-<li>India seeks to emulate <b>U.S. investment</b> models to integrate <b>AI infrastructure</b> into its national GDP growth.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Large economies are prioritizing massive capital expenditure to secure AI-driven economic advantages. <a href="https://economictimes.indiatimes.com/prime/technology-and-startups/ai-is-powering-us-gdp-why-india-cannot-afford-to-be-left-behind/primearticleshow/133070244.cms" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Pakistan News</h3>
-<ul>
-<li>Pakistan is shifting <b>agricultural cooperation</b> with the U.S. toward <b>technology-led solutions</b> to modernize the farming sector.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Tech-driven agricultural integration is vital for boosting domestic productivity and export potential. <a href="https://thepakistan.pk/pakistan-us-agricultural-technology-modern-farming/" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Technology</h3>
-<ul>
-<li>Qatar’s MCIT successfully graduated <b>ten startups</b> from its Scale Now program to bolster the <b>local tech</b> ecosystem.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Regional government support is accelerating the maturation of high-growth technology ventures. <a href="https://www.qatar-tribune.com/article/248048/nation/mcit-celebrates-graduation-of-10-tech-firms-from-third-cohort-of-scale-now" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-<li>Rising <b>memory chip</b> prices threaten to create significant operational headwinds for <b>Apple’s</b> hardware manufacturing costs.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Volatile component pricing remains a major risk factor for consumer electronics profitability. <a href="https://finance.yahoo.com/markets/stocks/articles/apple-ceo-tim-cook-just-222000544.html" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>AI</h3>
-<ul>
-<li>Malaysia is pursuing <b>strategic partnerships</b> with South Korea to integrate <b>AI and semiconductors</b> into its industrial sector.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Emerging markets are aggressively seeking cross-border alliances to capture high-value AI supply chains. <a href="https://www.koreatimes.co.kr/foreignaffairs/20260810/malaysia-positions-itself-as-koreas-long-term-tech-partner" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
-
-<h3>Business</h3>
-<ul>
-<li>U.S. <b>technology stocks</b> face a volatility test as investors monitor inflation data to gauge <b>Fed rate</b> paths.
-<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Interest rate stability is essential for maintaining current valuations in the tech sector. <a href="https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stock-rally-faces-inflation-test-as-investors-weigh-fed-rate-path/articleshow/133080203.cms" target="_blank" rel="noopener noreferrer" style="color:#3B82F6;text-decoration:none;">Read more ↗</a></div></li>
-</ul>
+        <h3>AI</h3><ul><li>NVIDIA launches new <b>accelerated computing chips</b> for data centers.<div style="margin-top: 10px; margin-bottom: 24px;"><strong style="font-weight: 700; color: #000000; font-size: 14px; display: block; margin-bottom: 4px;">Why this matters:</strong>Drives high-performance infrastructure for next-gen LLM training. <a href="#">Read more ↗</a></div></li></ul>
       </div>
 
       <div style="margin-top: 30px; text-align: center;">
@@ -407,9 +256,9 @@
       <div style="font-size: 11px; font-weight: 700; color: #111111; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">TECHNEWS · AUTOMATED EXECUTIVE BRIEFING</div>
       <div style="font-size: 11px; font-weight: 600; color: #111111; margin-bottom: 16px; line-height: 1.5;">Curated Daily Market &amp; Tech Intelligence Engine</div>
       <div style="text-align: center; margin-top: 16px;">
-        <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="120" style="display: block; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+        <img class="light-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1765796805/vision_b_w_p1armv.png" alt="Vision Logo" width="120" style="display: block; margin: 0 auto; border: 0; max-width: 140px; height: auto; filter: drop-shadow(0px 0px 1px #ffffff) drop-shadow(0px 0px 2px #ffffff);" />
         <!--[if !mso]><!-->
-        <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.webp" alt="Vision Logo" width="120" style="display: none; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
+        <img class="dark-logo" src="https://res.cloudinary.com/dereplqra/image/upload/v1749124870/Vision71_Tech_m42tgm.png" alt="Vision Logo" width="120" style="display: none; margin: 0 auto; border: 0; max-width: 140px; height: auto;" />
         <!--<![endif]-->
       </div>
     </div>
